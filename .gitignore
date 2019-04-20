@@ -37,6 +37,13 @@ ipch/
 *.opensdf
 
 # ignore Debug, .vs
+.vs/
+*.suo
+*.db
+*.tlog
+slnx.sqlite
 ChineseChess/.vs/
 ChineseChess/Debug/
+ChineseChess/Debug/*.ilk
+ChineseChess/Debug/*.pdb
 ChineseChess/ChineseChess/Debug/
