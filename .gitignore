@@ -35,3 +35,8 @@
 ipch/
 *.opendb
 *.opensdf
+
+# ignore Debug, .vs
+ChineseChess/.vs/
+ChineseChess/Debug/
+ChineseChess/ChineseChess/Debug/
