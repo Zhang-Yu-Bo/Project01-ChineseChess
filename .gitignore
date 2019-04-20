@@ -41,10 +41,7 @@ ipch/
 *.suo
 *.db
 *.tlog
-slnx.sqlite
 Debug/
-ChineseChess/.vs/
+ChineseChess/.vs/ChineseChess/
 ChineseChess/Debug/
-ChineseChess/Debug/*.ilk
-ChineseChess/Debug/*.pdb
 ChineseChess/ChineseChess/Debug/

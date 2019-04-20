@@ -6,10 +6,8 @@ int main(void) {
 
 	cout << "Hello Git\n";
 	cout << "涵語說:大家加油 :3333" << endl;
-	cout << "Change IDE to Visual Studio IDE 2019 測試\n";
-	cout << "Change IDE to Visual Studio IDE 2019 測試2\n";
-	cout << "Change IDE to Visual Studio IDE 2019 測試3\n";
 	cout << "Change IDE to Visual Studio IDE 2019 測試4\n";
+	cout << "Change IDE to Visual Studio IDE 2019 測試5\n";
 	system("pause");
 	return 0;
 }
