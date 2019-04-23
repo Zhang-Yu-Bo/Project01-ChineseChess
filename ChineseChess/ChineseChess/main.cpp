@@ -10,6 +10,7 @@ int main(void) {
 	cout << "Change IDE to Visual Studio IDE 2019 代刚5\n";
 	cout << "Change IDE to Visual Studio IDE 2019 代刚6\n";
 	cout << "Change IDE to Visual Studio IDE 2019 代刚7\n";
+	cout << "Change IDE to Visual Studio IDE 2019 代刚8\n";
 	system("pause");
 	return 0;
 }
