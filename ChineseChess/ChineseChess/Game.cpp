@@ -13,11 +13,11 @@
 // 初始化&宣告 Game.h 裡的 extern string [gameMenu]
 #ifdef _GAME_MENU_
 const string gameMenu[5] = {
-	"＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝",
-	"∥　　　　　→開始遊戲　　　　　∥",
-	"＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝",
-	"∥　　　　　　結束程式　　　　　∥",
-	"＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝"
+	"▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼\n",
+	"∥　　　　　→開始遊戲　　　　　∥\n",
+	"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥\n",
+	"∥　　　　　　結束程式　　　　　∥\n",
+	"▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲"
 };
 #endif // _GAME_MENU_
 
@@ -96,12 +96,14 @@ namespace {
 				}
 			}
 			inputStream >> whosTurn;
+			/*
 			if (inputStream.bad())
 				cout << "I/O error while reading\n";
 			else if (inputStream.eof())
 				cout << "End of file reached successfully\n";
 			else if (inputStream.fail())
 				cout << "Non-integer data encountered\n";
+			*/
 			inputStream.close();
 			return whosTurn;
 		}
@@ -160,12 +162,11 @@ namespace {
 
 Game::Game()
 {
-	cursorPosition.X = 0;	cursorPosition.Y = 0;
+	this->nowTurn = 0;
+	this->tableFileName = "";
 	currentCoordinate = make_pair(0, 0);
-	//system("cls");
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	//SMALL_RECT windowSize = { 0,0,33, 20 };
-	//SetConsoleWindowInfo(handle, TRUE, &windowSize);
+	cursorPosition.X = 0;	cursorPosition.Y = 0;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 
@@ -177,12 +178,13 @@ Game::~Game()
 void Game::showMenu() {
 
 	// 設置視窗大小
-	SMALL_RECT windowSize = { 0,0,34, 4 };
+	SMALL_RECT windowSize = { 0,0,33, 4 };
 	SetConsoleWindowInfo(handle, TRUE, &windowSize);
 
+	setColor(7);
 	// 顯示輸出Menu內容
 	for (int i = 0; i < (sizeof(gameMenu) / sizeof(gameMenu[0])); i++)
-		cout << gameMenu[i] << endl;
+		cout << gameMenu[i];
 	
 	// 將畫面往上拉，若不將光標位置y提至0的話，console畫面將會往下一點
 	setConsoleCursorCoordinate(0, 0);
@@ -201,12 +203,12 @@ void Game::showMenu() {
 		if (commandPress == 80)	y += 2;
 
 		if (commandPress == 13) {
-			if (y == 3) {
-				exit(1);
-			}
-			else {
+			if (y == 1) {
 				cout << "\a";
 				this->gameStart();
+			}
+			else if (y == 3) {
+				exit(1);
 			}
 		}
 
@@ -268,7 +270,7 @@ void Game::gameStart() {
 
 			break;
 		case 13:				//Enter
-
+			setColor(252);	cout << "車\b\b";
 			break;
 		case 27:				//Esc
 			system("cls");

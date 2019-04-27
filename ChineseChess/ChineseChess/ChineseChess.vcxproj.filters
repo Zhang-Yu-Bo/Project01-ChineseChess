@@ -21,9 +21,15 @@
     <ClCompile Include="Game.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="PieceClassIndex\Pieces.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceClassIndex\Pieces.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

@@ -27,6 +27,10 @@ extern const string chessChinese[15];
 extern COORDINATE currentCoordinate;
 #endif // !_CURRENT_COORDINATE_
 
+#ifndef _PIECES_H_
+#define _PIECES_H_
+#include "PieceClassIndex/Pieces.h"
+#endif // !_PIECES_H_
 
 static CONSOLE_SCREEN_BUFFER_INFO csbi;
 static CONSOLE_CURSOR_INFO cci;
@@ -42,5 +46,7 @@ public:
 	void initializeGame();
 	void showMenu();
 private:
-
+	int nowTurn;
+	string tableFileName;
+	vector<vector<int>> boardStatus;
 };
