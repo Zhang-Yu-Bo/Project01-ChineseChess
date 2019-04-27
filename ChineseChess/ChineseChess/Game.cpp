@@ -151,7 +151,7 @@ namespace {
 		cci.bVisible = flag;
 		SetConsoleCursorInfo(handle, &cci);
 	}
-	void setConsoleCursorPostion(int x = 42, int y = 2) {
+	void setConsoleCursorCoordinate(int x = 42, int y = 2) {
 		cursorPosition.X = x;	cursorPosition.Y = y;
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 	}
@@ -176,23 +176,23 @@ Game::~Game()
 
 void Game::showMenu() {
 
-	// 顯示輸出Menu內容
-	for (int i = 0; i < (sizeof(gameMenu) / sizeof(gameMenu[0])); i++)
-		cout << gameMenu[i] << endl;
-	
-	// 設定初始光標位置
-	int commandPress = 0, y = 1;
-	cursorPosition.X = 14;	cursorPosition.Y = 1;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
-
 	// 設置視窗大小
 	SMALL_RECT windowSize = { 0,0,34, 4 };
 	SetConsoleWindowInfo(handle, TRUE, &windowSize);
 
+	// 顯示輸出Menu內容
+	for (int i = 0; i < (sizeof(gameMenu) / sizeof(gameMenu[0])); i++)
+		cout << gameMenu[i] << endl;
+	
+	// 將畫面往上拉，若不將光標位置y提至0的話，console畫面將會往下一點
+	setConsoleCursorCoordinate(0, 0);
+
+	// 設定初始光標位置
+	int commandPress = 0, y = 1;
+	setConsoleCursorCoordinate(14, 1);
+
 	// 隱藏光標
-	GetConsoleCursorInfo(handle, &cci);
-	cci.bVisible = false;
-	SetConsoleCursorInfo(handle, &cci);
+	cursorVisiable(false);
 
 	// 光標控制
 	while (commandPress =_getch())
@@ -231,19 +231,19 @@ void Game::gameStart() {
 	SetConsoleWindowInfo(handle, TRUE, &windowSize);
 
 	// 繪製遊戲畫面
-	whosTurn = setFileNameAndProcess("Initial.txt", chessInt);
+	whosTurn = setFileNameAndProcess("Test.txt", chessInt);
 	printTopBorder();
 	printBoard(chessInt);
 	printDownBorder();
 
 	// 將畫面往上拉，若不將光標位置y提至0的話，console畫面將會往下一點
-	setConsoleCursorPostion(0, 0);
+	setConsoleCursorCoordinate(0, 0);
 
 	// 顯示光標(Cursor)
 	cursorVisiable(true);
 
 	int commandPress, x = 42, y = 2;
-	setConsoleCursorPostion();
+	setConsoleCursorCoordinate();
 
 	while (commandPress = _getch())
 	{
@@ -271,7 +271,8 @@ void Game::gameStart() {
 
 			break;
 		case 27:				//Esc
-
+			system("cls");
+			this->showMenu();
 			break;
 		default:
 			break;
@@ -281,6 +282,6 @@ void Game::gameStart() {
 		x = (x < 42) ? (42 + 32) : x;
 		y = (y > (2 + 18)) ? 2 : y;
 		y = (y < 2) ? (2 + 18) : y;
-		setConsoleCursorPostion(x, y);
+		setConsoleCursorCoordinate(x, y);
 	}
 }
