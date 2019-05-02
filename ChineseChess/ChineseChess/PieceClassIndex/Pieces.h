@@ -4,6 +4,9 @@
 using namespace std;
 #define COORDINATE pair<int,int>
 
+
+#ifndef _PIECES_H_
+#define _PIECES_H_
 class Pieces
 {
 public:
@@ -16,3 +19,4 @@ protected:
 private:
 
 };
+#endif // !_PIECES_H_

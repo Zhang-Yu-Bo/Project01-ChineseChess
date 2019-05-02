@@ -10,55 +10,9 @@
 // Enter:	13
 // Esc:		27
 
-// 初始化&宣告 Game.h 裡的 extern string [gameMenu]
-#ifdef _GAME_MENU_
-const string gameMenu[5] = {
-	"▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼\n",
-	"∥　　　　　→開始遊戲　　　　　∥\n",
-	"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥\n",
-	"∥　　　　　　結束程式　　　　　∥\n",
-	"▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲"
-};
-#endif // _GAME_MENU_
-
-// 初始化&宣告 Game.h 裡的 extern string [clearBoard]
-#ifdef _CLEAR_BOARD_
-const string clearBoard[21][18] = {
-	{"１","　","２","　","３","　","４","　","５","　","６","　","７","　","８","　","９"},
-	{"‧","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","‧"},
-	{"∥","　","｜","　","｜","　","｜","＼","｜","／","｜","　","｜","　","｜","　","∥"},
-	{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-	{"∥","　","｜","　","｜","　","｜","／","｜","＼","｜","　","｜","　","｜","　","∥"},
-	{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-	{"∥","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","∥"},
-	{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-	{"∥","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","∥"},
-	{"∥","－","－","－","－","－","－","－","－","－","－","－","－","－","－","－","∥"},
-	{"∥","　","　","楚","河","　","　","　"," 　"," ","　","　","漢","界","　","　","∥"},
-	{"∥","－","－","－","－","－","－","－","－","－","－","－","－","－","－","－","∥"},
-	{"∥","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","∥"},
-	{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-	{"∥","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","∥"},
-	{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-	{"∥","　","｜","　","｜","　","｜","＼","｜","／","｜","　","｜","　","｜","　","∥"},
-	{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-	{"∥","　","｜","　","｜","　","｜","／","｜","＼","｜","　","｜","　","｜","　","∥"},
-	{"‧","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","‧"},
-	{"九","　","八","　","七","　","六","　","五","　","四","　","三","　","二","　","一"}
-};
-#endif // _CLEAR_BOARD_
-
-// 初始化&宣告 Game.h 裡的 extern const string [chessChinese]
-#ifdef _CHESS_CHINESE_
-const string chessChinese[15] = {
-	"","將","士","象","車","馬","包","卒","帥","仕","相","車","傌","炮","兵"
-};
-#endif // _CHESS_CHINESE_
-
 #ifdef _CURRENT_COORDINATE_
 COORDINATE currentCoordinate(0, 0);
 #endif // _CURRENT_COORDINATE_
-
 
 namespace {
 	void setColor(int f = 7, int b = 0) {
@@ -113,6 +67,7 @@ namespace {
 			return whosTurn;
 		}
 	}
+	/*
 	// 輸出象棋(中文)
 	void printChess(int i)
 	{
@@ -141,6 +96,7 @@ namespace {
 			cout << endl;
 		}
 	}
+	*/
 	void printTopBorder() {
 		cout << "▼";
 		for (int i = 0; i < 57; i++)
@@ -182,49 +138,6 @@ Game::~Game()
 
 void Game::showMenu() {
 
-	// 設置視窗大小
-	SMALL_RECT windowSize = { 0,0,33, 4 };
-	SetConsoleWindowInfo(handle, TRUE, &windowSize);
-
-	setColor(7);
-	// 顯示輸出Menu內容
-	for (int i = 0; i < (sizeof(gameMenu) / sizeof(gameMenu[0])); i++)
-		cout << gameMenu[i];
-
-	// 將畫面往上拉，若不將光標位置y提至0的話，console畫面將會往下一點
-	setConsoleCursorCoordinate(0, 0);
-
-	// 設定初始光標位置
-	int commandPress = 0, y = 1;
-	setConsoleCursorCoordinate(14, 1);
-
-	// 隱藏光標
-	cursorVisiable(false);
-
-	// 光標控制
-	while (commandPress = _getch())
-	{
-		if (commandPress == 72)	y -= 2;
-		if (commandPress == 80)	y += 2;
-
-		if (commandPress == 13) {
-			if (y == 1) {
-				cout << "\a";
-				this->gameStart();
-			}
-			else if (y == 3) {
-				exit(1);
-			}
-		}
-
-		if (y < 1)	y = 3;
-		if (y > 3)	y = 1;
-
-		cout << "\b\b　";
-		cursorPosition.Y = y;
-		SetConsoleCursorPosition(handle, cursorPosition);
-		cout << "\b\b→";
-	}
 }
 
 void Game::gameStart() {
@@ -238,7 +151,7 @@ void Game::gameStart() {
 	SetConsoleWindowInfo(handle, TRUE, &windowSize);
 
 	// 繪製遊戲畫面
-	whosTurn = setFileNameAndProcess("Test.txt", chessInt);
+	whosTurn = setFileNameAndProcess("Initial.txt", chessInt);
 	printTopBorder();
 	printBoard(chessInt);
 	printDownBorder();
@@ -290,5 +203,32 @@ void Game::gameStart() {
 		y = (y > (2 + 18)) ? 2 : y;
 		y = (y < 2) ? (2 + 18) : y;
 		setConsoleCursorCoordinate(x, y);
+	}
+}
+
+void Game::printChess(int i) {
+	cout << this->chessChinese[i];
+}
+
+void Game::printBoard(int chessInt[12][11]) {
+	for (int i = 0; i < 21; i++) {
+		printLeftSpace();
+		for (int j = 0; j < 18; j++) {
+			if (i % 2 == 1 && j % 2 == 0 && chessInt[(i / 2) + 1][(j / 2) + 1] != 0)
+			{
+				if (chessInt[(i / 2) + 1][(j / 2) + 1] >= 1 && chessInt[(i / 2) + 1][(j / 2) + 1] <= 7)
+					setColor(240);
+				else if (chessInt[(i / 2) + 1][(j / 2) + 1] >= 8 && chessInt[(i / 2) + 1][(j / 2) + 1] <= 14)
+					setColor(252);
+				printChess(chessInt[(i / 2) + 1][(j / 2) + 1]);
+			}
+			else {
+				// 奇數列偶數行判斷int陣列裡面的東東
+				setColor(116);
+				cout << this->clearBoard[i][j];
+			}
+		}
+		printRightSpace();
+		cout << endl;
 	}
 }
