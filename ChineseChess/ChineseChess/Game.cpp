@@ -44,14 +44,14 @@ const string clearBoard[21][18] = {
 	{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
 	{"∥","　","｜","　","｜","　","｜","／","｜","＼","｜","　","｜","　","｜","　","∥"},
 	{"‧","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","‧"},
-	{"九","　","八","　","七","　","六","　","五","　","四","　","三","　","二","　","一"} 
+	{"九","　","八","　","七","　","六","　","五","　","四","　","三","　","二","　","一"}
 };
 #endif // _CLEAR_BOARD_
 
 // 初始化&宣告 Game.h 裡的 extern const string [chessChinese]
 #ifdef _CHESS_CHINESE_
-const string chessChinese[15] = { 
-	"","將","士","象","車","馬","包","卒","帥","仕","相","車","傌","炮","兵" 
+const string chessChinese[15] = {
+	"","將","士","象","車","馬","包","卒","帥","仕","相","車","傌","炮","兵"
 };
 #endif // _CHESS_CHINESE_
 
@@ -67,22 +67,27 @@ namespace {
 		SetConsoleTextAttribute(handle, ForeColor);
 	}
 	// 左方空位
-	void printLeftSpace() { 
+	void printLeftSpace() {
 		// 1+20
-		setColor(7); 
+		setColor(7);
 		cout << "∥　　　　　　　　　　　　　　　　　　　　";
 	}
 	//右方空位
-	void printRightSpace() { 
+	void printRightSpace() {
 		// 20+1
-		setColor(7); 
-		cout << "　　　　　　　　　　　　　　　　　　　　∥";	
+		setColor(7);
+		cout << "　　　　　　　　　　　　　　　　　　　　∥";
 	}
-	int setFileNameAndProcess(string fileName, int chessInt[10][9])
+	int setFileNameAndProcess(string fileName, int chessInt[12][11])
 	{
 		int whosTurn = 0;
 		fstream inputStream;
-		inputStream.open(("boardText/"+fileName));
+		for (int i = 0; i < 12; i++) {
+			for (int j = 0; j < 11; j++) {
+				if (i == 0 || j == 0 || i == 11 || j == 1)chessInt[i][j] = -1;
+			}
+		}
+		inputStream.open(("boardText/" + fileName));
 		if (!inputStream)  // operator! is used here
 		{
 			cout << "沒有這個檔案\n";
@@ -90,8 +95,8 @@ namespace {
 			exit(1);
 		}
 		else {
-			for (int i = 0; i < 10; i++) {
-				for (int j = 0; j < 9; j++) {
+			for (int i = 1; i < 11; i++) {
+				for (int j = 1; j < 10; j++) {
 					inputStream >> chessInt[i][j];
 				}
 			}
@@ -113,18 +118,18 @@ namespace {
 	{
 		cout << chessChinese[i];
 	}
-	void printBoard(int chessInt[10][9])
+	void printBoard(int chessInt[12][11])
 	{
 		for (int i = 0; i < 21; i++) {
 			printLeftSpace();
 			for (int j = 0; j < 18; j++) {
-				if (i % 2 == 1 && j % 2 == 0 && chessInt[(i / 2)][(j / 2)] != 0)
+				if (i % 2 == 1 && j % 2 == 0 && chessInt[(i / 2) + 1][(j / 2) + 1] != 0)
 				{
-					if (chessInt[(i / 2)][(j / 2)] >= 1 && chessInt[(i / 2)][(j / 2)] <= 7) 
+					if (chessInt[(i / 2) + 1][(j / 2) + 1] >= 1 && chessInt[(i / 2) + 1][(j / 2) + 1] <= 7)
 						setColor(240);
-					else if (chessInt[(i / 2)][(j / 2)] >= 8 && chessInt[(i / 2)][(j / 2)] <= 14) 
+					else if (chessInt[(i / 2) + 1][(j / 2) + 1] >= 8 && chessInt[(i / 2) + 1][(j / 2) + 1] <= 14)
 						setColor(252);
-					printChess(chessInt[(i / 2)][(j / 2)]);
+					printChess(chessInt[(i / 2) + 1][(j / 2) + 1]);
 				}
 				else {
 					// 奇數列偶數行判斷int陣列裡面的東東
@@ -185,7 +190,7 @@ void Game::showMenu() {
 	// 顯示輸出Menu內容
 	for (int i = 0; i < (sizeof(gameMenu) / sizeof(gameMenu[0])); i++)
 		cout << gameMenu[i];
-	
+
 	// 將畫面往上拉，若不將光標位置y提至0的話，console畫面將會往下一點
 	setConsoleCursorCoordinate(0, 0);
 
@@ -197,7 +202,7 @@ void Game::showMenu() {
 	cursorVisiable(false);
 
 	// 光標控制
-	while (commandPress =_getch())
+	while (commandPress = _getch())
 	{
 		if (commandPress == 72)	y -= 2;
 		if (commandPress == 80)	y += 2;
@@ -223,7 +228,7 @@ void Game::showMenu() {
 }
 
 void Game::gameStart() {
-	int chessInt[10][9];
+	int chessInt[12][11];
 	int whosTurn = 0;
 
 	// 清空console
