@@ -7,10 +7,10 @@
 
 using namespace std;
 
-#ifndef _MAIN_MENU_
-#define _MAIN_MENU_
-extern const string mainMenu[5];
-#endif // !_MAIN_MENU_
+#ifndef _MAIN_MENU_OPTION_
+#define _MAIN_MENU_OPTION_
+extern const string mainMenuOption[5];
+#endif // !_MAIN_MENU_OPTION_
 
 
 #ifndef _MAIN_MENU_H_

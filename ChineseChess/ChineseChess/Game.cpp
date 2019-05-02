@@ -147,7 +147,9 @@ Game::~Game()
 }
 
 void Game::showMenu() {
-	menu->showMenu();
+	if (menu != NULL) {
+		menu->showMenu();
+	}
 }
 
 void Game::gameStart() {

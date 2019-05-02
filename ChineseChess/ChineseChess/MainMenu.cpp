@@ -1,7 +1,7 @@
 #include "MainMenu.h"
 
-#ifdef _MAIN_MENU_
-const string mainMenu[5] = {
+#ifdef _MAIN_MENU_OPTION_
+const string mainMenuOption[5] = {
 		"▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼\n",
 		"∥　　　　　→開始遊戲　　　　　∥\n",
 		"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥\n",
@@ -9,7 +9,7 @@ const string mainMenu[5] = {
 		"▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲"
 };
 #endif // _MAIN_MENU_
-MainMenu* menu;
+MainMenu* menu = NULL;
 
 namespace {
 	void cursorVisiable(bool flag) {
@@ -49,8 +49,8 @@ void MainMenu::showMenu() {
 
 	setColor(7,0);
 	// 顯示輸出Menu內容
-	for (int i = 0; i < (sizeof(mainMenu) / sizeof(mainMenu[0])); i++)
-		cout << mainMenu[i];
+	for (int i = 0; i < (sizeof(mainMenuOption) / sizeof(mainMenuOption[0])); i++)
+		cout << mainMenuOption[i];
 
 	// 將畫面往上拉，若不將光標位置y提至0的話，console畫面將會往下一點
 	setConsoleCursorCoordinate(0, 0);
