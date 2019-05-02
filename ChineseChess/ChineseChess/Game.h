@@ -37,6 +37,8 @@ static CONSOLE_CURSOR_INFO cci;
 static HANDLE handle;
 static COORD cursorPosition;
 
+#ifndef _GAME_H_
+#define _GAME_H_
 class Game
 {
 public:
@@ -50,3 +52,4 @@ private:
 	string tableFileName;
 	vector<vector<int>> boardStatus;
 };
+#endif // !_GAME_H_
