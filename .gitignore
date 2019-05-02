@@ -46,3 +46,5 @@ ChineseChess/.vs/ChineseChess/
 ChineseChess/.vs/ChineseChess/v16
 ChineseChess/Debug/
 ChineseChess/ChineseChess/Debug/
+*.vcxproj
+*.filters
