@@ -20,10 +20,6 @@ using namespace std;
 
 typedef pair<int, int> COORDINATE;
 
-#ifndef _CURRENT_COORDINATE_
-#define _CURRENT_COORDINATE_
-extern COORDINATE currentCoordinate;
-#endif // !_CURRENT_COORDINATE_
 
 #ifndef _CHESS_CHINESE_
 #define _CHESS_CHINESE_

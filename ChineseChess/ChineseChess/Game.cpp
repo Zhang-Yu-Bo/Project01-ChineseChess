@@ -10,10 +10,6 @@
 // Enter:	13
 // Esc:		27
 
-#ifdef _CURRENT_COORDINATE_
-COORDINATE currentCoordinate(0, 0);
-#endif // _CURRENT_COORDINATE_
-
 #ifdef _CONSOLE_INFO_HANDLE_
 CONSOLE_CURSOR_INFO cci;
 HANDLE handle;
@@ -127,7 +123,6 @@ Game::Game()
 {
 	this->nowTurn = 0;
 	this->tableFileName = "Initial.txt";
-	currentCoordinate = make_pair(0, 0);
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	cursorPosition.X = 0;	cursorPosition.Y = 0;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
@@ -143,7 +138,8 @@ Game::Game()
 
 Game::~Game()
 {
-
+	this->boardStatus.erase(this->boardStatus.begin(), this->boardStatus.end());
+	this->pointBoardStatus.erase(this->pointBoardStatus.begin(), this->pointBoardStatus.end());
 }
 
 void Game::showMenu() {
@@ -172,8 +168,9 @@ void Game::gameStart() {
 	cursorVisiable(true);
 
 	int commandPress, x = 42, y = 2;
-	setConsoleCursorCoordinate(42,2);
+	setConsoleCursorCoordinate(42, 2);
 	bool isTakingPiece = false;
+	COORDINATE virtualCoordinate = make_pair(1, 1);
 
 	while (commandPress = _getch())
 	{
@@ -199,7 +196,15 @@ void Game::gameStart() {
 			break;
 		case KEYBOARD_ENTER:
 			if (!isTakingPiece) {
-				isTakingPiece = true;
+				virtualCoordinate.first = (x - 42) / 4 +1;	//col
+				virtualCoordinate.second = (y - 2) / 2 +1;	//row
+				if (this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] != 0
+					&& this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] != -1) {
+					isTakingPiece = true;
+				}
+				else {
+					cout << "\a";
+				}
 			}
 			else {
 				cout << "\a";
