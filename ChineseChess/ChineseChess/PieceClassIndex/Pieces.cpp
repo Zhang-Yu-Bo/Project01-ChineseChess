@@ -1,4 +1,4 @@
-#include "../Game.h"
+#include "Pieces.h"
 
 Pieces::Pieces(int i, int j, bool) {
 

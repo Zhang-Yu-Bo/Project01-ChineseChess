@@ -5,16 +5,45 @@
 #include <fstream>
 #include <string>
 #include "PieceClassIndex/Pieces.h"
-#define COORDINATE pair<int,int>
+#include "MainMenu.h"
+
+#define KEYBOARD_UP 72
+#define KEYBOARD_DOWN 80
+#define KEYBOARD_LEFT 75
+#define KEYBOARD_RIGHT 77
+#define KEYBOARD_LEFT_SHIFT 44
+#define KEYBOARD_RIGHT_SHIFT 46
+#define KEYBOARD_ENTER 13
+#define KEYBOARD_ESCAPE 27
 
 using namespace std;
+
+typedef pair<int, int> COORDINATE;
 
 #ifndef _CURRENT_COORDINATE_
 #define _CURRENT_COORDINATE_
 extern COORDINATE currentCoordinate;
 #endif // !_CURRENT_COORDINATE_
 
-static CONSOLE_SCREEN_BUFFER_INFO csbi;
+#ifndef _CHESS_CHINESE_
+#define _CHESS_CHINESE_
+extern const string chessChinese[15];
+#endif // !_CHESS_CHINESE_
+
+#ifndef _CELAR_BOARD_
+#define _CELAR_BOARD_
+extern const string clearBoard[21][18];
+#endif // !_CELAR_BOARD_
+
+#ifndef _CONSOLE_INFO_HANDLE_
+#define _CONSOLE_INFO_HANDLE_
+extern CONSOLE_CURSOR_INFO cci;
+extern HANDLE handle;
+extern COORD cursorPosition;
+#endif // !_CONSOLE_INFO_HANDLE_
+
+
+//static CONSOLE_SCREEN_BUFFER_INFO csbi;
 
 #ifndef _GAME_H_
 #define _GAME_H_
@@ -27,45 +56,11 @@ public:
 	void showMenu();
 private:
 	// function
-	void printChess(int);
-	void printBoard(int chessInt[12][11]);
-	CONSOLE_CURSOR_INFO cci;
-	HANDLE handle;
-	COORD cursorPosition;
-	void cursorVisiable(bool);
-	void setConsoleCursorCoordinate(int, int);
-	void setColor(int, int);
-	void printLeftSpace();
-	void printRightSpace();
-
+	void setFileNameAndProcess();
+	// 
 	int nowTurn;
 	string tableFileName;
 	vector<vector<int>> boardStatus;
-	const string chessChinese[15] = {
-		"","將","士","象","車","馬","包","卒","帥","仕","相","車","傌","炮","兵"
-	};
-	const string clearBoard[21][18] = {
-		{"１","　","２","　","３","　","４","　","５","　","６","　","７","　","８","　","９"},
-		{"‧","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","‧"},
-		{"∥","　","｜","　","｜","　","｜","＼","｜","／","｜","　","｜","　","｜","　","∥"},
-		{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-		{"∥","　","｜","　","｜","　","｜","／","｜","＼","｜","　","｜","　","｜","　","∥"},
-		{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-		{"∥","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","∥"},
-		{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-		{"∥","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","∥"},
-		{"∥","－","－","－","－","－","－","－","－","－","－","－","－","－","－","－","∥"},
-		{"∥","　","　","楚","河","　","　","　"," 　"," ","　","　","漢","界","　","　","∥"},
-		{"∥","－","－","－","－","－","－","－","－","－","－","－","－","－","－","－","∥"},
-		{"∥","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","∥"},
-		{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-		{"∥","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","｜","　","∥"},
-		{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-		{"∥","　","｜","　","｜","　","｜","＼","｜","／","｜","　","｜","　","｜","　","∥"},
-		{"∥","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","＋","－","∥"},
-		{"∥","　","｜","　","｜","　","｜","／","｜","＼","｜","　","｜","　","｜","　","∥"},
-		{"‧","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","＝","‧"},
-		{"九","　","八","　","七","　","六","　","五","　","四","　","三","　","二","　","一"}
-	};
+	vector<vector<Pieces*>> pointBoardStatus;
 };
 #endif // !_GAME_H_

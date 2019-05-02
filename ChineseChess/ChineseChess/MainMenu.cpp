@@ -1,10 +1,40 @@
 #include "MainMenu.h"
 
+#ifdef _MAIN_MENU_
+const string mainMenu[5] = {
+		"▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼\n",
+		"∥　　　　　→開始遊戲　　　　　∥\n",
+		"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥\n",
+		"∥　　　　　　結束程式　　　　　∥\n",
+		"▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲"
+};
+#endif // _MAIN_MENU_
+MainMenu* menu;
+
+namespace {
+	void cursorVisiable(bool flag) {
+		GetConsoleCursorInfo(handle, &cci);
+		cci.bVisible = flag;
+		SetConsoleCursorInfo(handle, &cci);
+	}
+	void setConsoleCursorCoordinate(int x = 42, int y = 2) {
+		cursorPosition.X = x;	cursorPosition.Y = y;
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+	}
+
+	void setColor(int f = 7, int b = 0) {
+		// 使用的常用代碼:240>>白底黑字，116>>灰底深紅字，7>>黑底白字，252>>白底紅字
+		unsigned short ForeColor = f + 16 * b;
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ForeColor);
+	}
+}
+
 MainMenu::MainMenu()
 {
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	cursorPosition.X = 0;	cursorPosition.Y = 0;
 	SetConsoleCursorPosition(handle, cursorPosition);
+	menu = this;
 }
 
 MainMenu::~MainMenu()
@@ -58,20 +88,4 @@ void MainMenu::showMenu() {
 		SetConsoleCursorPosition(handle, cursorPosition);
 		cout << "\b\b→";
 	}
-}
-
-void MainMenu::cursorVisiable(bool flag) {
-	GetConsoleCursorInfo(handle, &cci);
-	cci.bVisible = flag;
-	SetConsoleCursorInfo(handle, &cci);
-}
-void MainMenu::setConsoleCursorCoordinate(int x = 42, int y = 2) {
-	cursorPosition.X = x;	cursorPosition.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
-}
-
-void MainMenu::setColor(int f = 7, int b = 0) {
-	// 使用的常用代碼:240>>白底黑字，116>>灰底深紅字，7>>黑底白字，252>>白底紅字
-	unsigned short ForeColor = f + 16 * b;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ForeColor);
 }
