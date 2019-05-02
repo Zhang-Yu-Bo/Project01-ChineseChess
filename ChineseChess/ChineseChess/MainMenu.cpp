@@ -1,13 +1,5 @@
 #include "MainMenu.h"
 
-namespace {
-	void setColor(int f = 7, int b = 0) {
-		// 使用的常用代碼:240>>白底黑字，116>>灰底深紅字，7>>黑底白字，252>>白底紅字
-		unsigned short ForeColor = f + 16 * b;
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ForeColor);
-	}
-}
-
 MainMenu::MainMenu()
 {
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -15,12 +7,17 @@ MainMenu::MainMenu()
 	SetConsoleCursorPosition(handle, cursorPosition);
 }
 
+MainMenu::~MainMenu()
+{
+
+}
+
 void MainMenu::showMenu() {
 	// 設置視窗大小
 	SMALL_RECT windowSize = { 0,0,33, 4 };
 	SetConsoleWindowInfo(handle, TRUE, &windowSize);
 
-	setColor(7);
+	setColor(7,0);
 	// 顯示輸出Menu內容
 	for (int i = 0; i < (sizeof(mainMenu) / sizeof(mainMenu[0])); i++)
 		cout << mainMenu[i];
@@ -63,11 +60,6 @@ void MainMenu::showMenu() {
 	}
 }
 
-MainMenu::~MainMenu()
-{
-
-}
-
 void MainMenu::cursorVisiable(bool flag) {
 	GetConsoleCursorInfo(handle, &cci);
 	cci.bVisible = flag;
@@ -76,4 +68,10 @@ void MainMenu::cursorVisiable(bool flag) {
 void MainMenu::setConsoleCursorCoordinate(int x = 42, int y = 2) {
 	cursorPosition.X = x;	cursorPosition.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+}
+
+void MainMenu::setColor(int f = 7, int b = 0) {
+	// 使用的常用代碼:240>>白底黑字，116>>灰底深紅字，7>>黑底白字，252>>白底紅字
+	unsigned short ForeColor = f + 16 * b;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ForeColor);
 }

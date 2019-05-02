@@ -15,23 +15,6 @@ COORDINATE currentCoordinate(0, 0);
 #endif // _CURRENT_COORDINATE_
 
 namespace {
-	void setColor(int f = 7, int b = 0) {
-		// 使用的常用代碼:240>>白底黑字，116>>灰底深紅字，7>>黑底白字，252>>白底紅字
-		unsigned short ForeColor = f + 16 * b;
-		SetConsoleTextAttribute(handle, ForeColor);
-	}
-	// 左方空位
-	void printLeftSpace() {
-		// 1+20
-		setColor(7);
-		cout << "∥　　　　　　　　　　　　　　　　　　　　";
-	}
-	//右方空位
-	void printRightSpace() {
-		// 20+1
-		setColor(7);
-		cout << "　　　　　　　　　　　　　　　　　　　　∥";
-	}
 	int setFileNameAndProcess(string fileName, int chessInt[12][11])
 	{
 		int whosTurn = 0;
@@ -67,36 +50,6 @@ namespace {
 			return whosTurn;
 		}
 	}
-	/*
-	// 輸出象棋(中文)
-	void printChess(int i)
-	{
-		cout << chessChinese[i];
-	}
-	void printBoard(int chessInt[12][11])
-	{
-		for (int i = 0; i < 21; i++) {
-			printLeftSpace();
-			for (int j = 0; j < 18; j++) {
-				if (i % 2 == 1 && j % 2 == 0 && chessInt[(i / 2) + 1][(j / 2) + 1] != 0)
-				{
-					if (chessInt[(i / 2) + 1][(j / 2) + 1] >= 1 && chessInt[(i / 2) + 1][(j / 2) + 1] <= 7)
-						setColor(240);
-					else if (chessInt[(i / 2) + 1][(j / 2) + 1] >= 8 && chessInt[(i / 2) + 1][(j / 2) + 1] <= 14)
-						setColor(252);
-					printChess(chessInt[(i / 2) + 1][(j / 2) + 1]);
-				}
-				else {
-					// 奇數列偶數行判斷int陣列裡面的東東
-					setColor(116);
-					cout << clearBoard[i][j];
-				}
-			}
-			printRightSpace();
-			cout << endl;
-		}
-	}
-	*/
 	void printTopBorder() {
 		cout << "▼";
 		for (int i = 0; i < 57; i++)
@@ -109,15 +62,6 @@ namespace {
 			cout << "＝";
 		cout << "▲";
 	}
-	void cursorVisiable(bool flag) {
-		GetConsoleCursorInfo(handle, &cci);
-		cci.bVisible = flag;
-		SetConsoleCursorInfo(handle, &cci);
-	}
-	void setConsoleCursorCoordinate(int x = 42, int y = 2) {
-		cursorPosition.X = x;	cursorPosition.Y = y;
-		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
-	}
 }
 
 
@@ -126,9 +70,9 @@ Game::Game()
 	this->nowTurn = 0;
 	this->tableFileName = "";
 	currentCoordinate = make_pair(0, 0);
-	handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	cursorPosition.X = 0;	cursorPosition.Y = 0;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+	this->handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	this->cursorPosition.X = 0;	this->cursorPosition.Y = 0;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), this->cursorPosition);
 }
 
 Game::~Game()
@@ -163,7 +107,7 @@ void Game::gameStart() {
 	cursorVisiable(true);
 
 	int commandPress, x = 42, y = 2;
-	setConsoleCursorCoordinate();
+	setConsoleCursorCoordinate(42,2);
 
 	while (commandPress = _getch())
 	{
@@ -188,7 +132,7 @@ void Game::gameStart() {
 
 			break;
 		case 13:				//Enter
-			setColor(252);	cout << "車\b\b";
+			setColor(252,0);	cout << "車";
 			break;
 		case 27:				//Esc
 			system("cls");
@@ -217,18 +161,47 @@ void Game::printBoard(int chessInt[12][11]) {
 			if (i % 2 == 1 && j % 2 == 0 && chessInt[(i / 2) + 1][(j / 2) + 1] != 0)
 			{
 				if (chessInt[(i / 2) + 1][(j / 2) + 1] >= 1 && chessInt[(i / 2) + 1][(j / 2) + 1] <= 7)
-					setColor(240);
+					setColor(240,0);
 				else if (chessInt[(i / 2) + 1][(j / 2) + 1] >= 8 && chessInt[(i / 2) + 1][(j / 2) + 1] <= 14)
-					setColor(252);
+					setColor(252,0);
 				printChess(chessInt[(i / 2) + 1][(j / 2) + 1]);
 			}
 			else {
 				// 奇數列偶數行判斷int陣列裡面的東東
-				setColor(116);
+				setColor(116,0);
 				cout << this->clearBoard[i][j];
 			}
 		}
 		printRightSpace();
 		cout << endl;
 	}
+}
+
+void Game::setColor(int f = 7, int b = 0) {
+	// 使用的常用代碼:240>>白底黑字，116>>灰底深紅字，7>>黑底白字，252>>白底紅字
+	unsigned short ForeColor = f + 16 * b;
+	SetConsoleTextAttribute(handle, ForeColor);
+}
+
+void Game::cursorVisiable(bool flag) {
+	GetConsoleCursorInfo(handle, &cci);
+	cci.bVisible = flag;
+	SetConsoleCursorInfo(handle, &cci);
+}
+void Game::setConsoleCursorCoordinate(int x = 42, int y = 2) {
+	cursorPosition.X = x;	cursorPosition.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+}
+
+// 左方空位
+void Game::printLeftSpace() {
+	// 1+20
+	setColor(7);
+	cout << "∥　　　　　　　　　　　　　　　　　　　　";
+}
+//右方空位
+void Game::printRightSpace() {
+	// 20+1
+	setColor(7);
+	cout << "　　　　　　　　　　　　　　　　　　　　∥";
 }

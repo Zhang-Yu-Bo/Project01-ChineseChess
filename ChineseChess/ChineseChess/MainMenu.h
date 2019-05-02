@@ -15,12 +15,13 @@ public:
 	MainMenu();
 	~MainMenu();
 	void showMenu();
-	void cursorVisiable(bool);
-	void setConsoleCursorCoordinate(int, int);
 private:
 	HANDLE handle;
 	COORD cursorPosition;
 	CONSOLE_CURSOR_INFO cci;
+	void cursorVisiable(bool);
+	void setConsoleCursorCoordinate(int, int);
+	void setColor(int, int);
 	const string mainMenu[5] = {
 		"¡¿¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡×¡¿\n",
 		"¡ü¡@¡@¡@¡@¡@¡÷¶}©l¹CÀ¸¡@¡@¡@¡@¡@¡ü\n",

@@ -15,9 +15,6 @@ extern COORDINATE currentCoordinate;
 #endif // !_CURRENT_COORDINATE_
 
 static CONSOLE_SCREEN_BUFFER_INFO csbi;
-static CONSOLE_CURSOR_INFO cci;
-static HANDLE handle;
-static COORD cursorPosition;
 
 #ifndef _GAME_H_
 #define _GAME_H_
@@ -29,8 +26,18 @@ public:
 	void gameStart();
 	void showMenu();
 private:
+	// function
 	void printChess(int);
 	void printBoard(int chessInt[12][11]);
+	CONSOLE_CURSOR_INFO cci;
+	HANDLE handle;
+	COORD cursorPosition;
+	void cursorVisiable(bool);
+	void setConsoleCursorCoordinate(int, int);
+	void setColor(int, int);
+	void printLeftSpace();
+	void printRightSpace();
+
 	int nowTurn;
 	string tableFileName;
 	vector<vector<int>> boardStatus;
