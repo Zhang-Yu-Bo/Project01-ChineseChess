@@ -27,6 +27,9 @@
     <ClCompile Include="MainMenu.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="PieceClassIndex\PieceClass.cpp">
+      <Filter>來源檔案\資源檔</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -36,6 +39,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="MainMenu.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceClassIndex\PieceClass.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
