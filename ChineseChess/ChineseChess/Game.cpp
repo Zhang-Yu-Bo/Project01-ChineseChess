@@ -178,6 +178,8 @@ void Game::gameStart() {
 	setConsoleCursorCoordinate(42, 2);
 	bool isTakingPiece = false;
 	COORDINATE virtualCoordinate = make_pair(1, 1);
+	COORDINATE destinationCoordinate = make_pair(1, 1);
+	vector<COORDINATE> whereCanMove;
 
 	while (commandPress = _getch())
 	{
@@ -203,17 +205,25 @@ void Game::gameStart() {
 			if (!isTakingPiece) {
 				// 如果現在還沒拿起棋子時：
 				// console座標轉換為棋盤座標
-				virtualCoordinate.first = (x - 42) / 4 + 1;			//col
-				virtualCoordinate.second = (y - 2) / 2 + 1;			//row
+				virtualCoordinate.first = (y - 2) / 2 + 1;				//row
+				virtualCoordinate.second = (x - 42) / 4 + 1;			//col
 
 				if (this->nowTurn == 0) {
 					// 現在回合:黑手
-					if (this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] >= 1
-						&& this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] <= 7) {
+					if (this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] >= 1
+						&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 7) {
 						isTakingPiece = true;
-						//setConsoleCursorCoordinate(2, 1);
-						//cout << this->pointBoardStatus[virtualCoordinate.second][virtualCoordinate.first];
-						//cout << this->boardStatus[virtualCoordinate.second][virtualCoordinate.first];
+
+						// 繪製可走範圍
+						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);;
+						for (int j = 0; j < whereCanMove.size(); j++) {
+							// 棋盤座標轉換為console座標
+							setConsoleCursorCoordinate((whereCanMove[j].second - 1) * 4 + 42, (whereCanMove[j].first - 1) * 2 + 2);
+							setColor(28);
+							// row=2*y-1		col=2*x-2
+							cout << clearBoard[2 * whereCanMove[j].first - 1][2 * whereCanMove[j].second - 2];
+						}
+
 					}
 					else {
 						cout << "\a";
@@ -221,12 +231,20 @@ void Game::gameStart() {
 				}
 				else if (this->nowTurn == 1) {
 					// 現在回合:紅手
-					if (this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] >= 8
-						&& this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] <= 14) {
+					if (this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] >= 8
+						&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 14) {
 						isTakingPiece = true;
-						//setConsoleCursorCoordinate(2, 1);
-						//cout << this->pointBoardStatus[virtualCoordinate.second][virtualCoordinate.first];
-						//cout << this->boardStatus[virtualCoordinate.second][virtualCoordinate.first];
+						
+						// 繪製可走範圍
+						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);;
+						for (int j = 0; j < whereCanMove.size(); j++) {
+							// 棋盤座標轉換為console座標
+							setConsoleCursorCoordinate((whereCanMove[j].second - 1) * 4 + 42, (whereCanMove[j].first - 1) * 2 + 2);
+							setColor(28);
+							// row=2*y-1		col=2*x-2
+							cout << clearBoard[2 * whereCanMove[j].first - 1][2 * whereCanMove[j].second - 2];
+						}
+
 					}
 					else {
 						cout << "\a";
@@ -236,11 +254,35 @@ void Game::gameStart() {
 			}
 			else {
 				// 如果現在拿起棋子時：
-				cout << "\a";
-				isTakingPiece = false;
-				this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
+				// console座標轉換為棋盤座標
+				destinationCoordinate.first = (y - 2) / 2 + 1;				//row
+				destinationCoordinate.second = (x - 42) / 4 + 1;			//col
+
+				if (virtualCoordinate == destinationCoordinate) {
+					// 如果選取原本的位置，則視為放下棋子重新選擇
+					isTakingPiece = false;
+					setConsoleCursorCoordinate(0, 1);
+					printBoard(this->boardStatus);
+				}
+				else {
+					bool isSuccess = false;
+					isSuccess = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->MoveAndEat(
+						destinationCoordinate,
+						this->boardStatus,
+						this->pointBoardStatus
+					);
+					if (isSuccess) {
+						// 移動或吃棋成功
+						isTakingPiece = false;
+						this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
+						setConsoleCursorCoordinate(0, 1);
+						printBoard(this->boardStatus);
+					}
+					else {
+						cout << "\a";
+					}
+				}
 			}
-			//setColor(252, 0);	cout << "車";
 		}
 		else if (commandPress == KEYBOARD_ESCAPE) {
 			system("cls");
@@ -266,65 +308,32 @@ void Game::setFileNameAndProcess() {
 		exit(1);
 	}
 	else {
+		bool isBlackOrRed = false;
 		for (int i = 1; i < 11; i++) {
 			for (int j = 1; j < 10; j++) {
 				inputStream >> boardStatus[i][j];
+				isBlackOrRed = (boardStatus[i][j] >= 1 && boardStatus[i][j] <= 7) ? false : true;
 				// 建立pointboardStatus
-				if (boardStatus[i][j] == 1) {
-					ClassGeneral* general = new ClassGeneral(i, j, false);
-					this->pointBoardStatus[i][j] = general;
+				if (boardStatus[i][j] == 1 || boardStatus[i][j]==8) {
+					this->pointBoardStatus[i][j] = new ClassGeneral(i, j, isBlackOrRed);
 				}
-				else if (boardStatus[i][j] == 2) {
-					ClassGuard* guard = new ClassGuard(i, j, false);
-					this->pointBoardStatus[i][j] = guard;
+				else if (boardStatus[i][j] == 2 || boardStatus[i][j]==9) {
+					this->pointBoardStatus[i][j] = new ClassGuard(i, j, isBlackOrRed);
 				}
-				else if (boardStatus[i][j] == 3) {
-					ClassMinister* minister = new ClassMinister(i, j, false);//changed (from "elephant" to "minister") [5/5,21:22]
-					this->pointBoardStatus[i][j] = minister;//changed (from "elephant" to "minister") [5/5,21:22]
+				else if (boardStatus[i][j] == 3 || boardStatus[i][j]==10) {
+					this->pointBoardStatus[i][j] = new ClassMinister(i, j, isBlackOrRed);
 				}
-				else if (boardStatus[i][j] == 4) {
-					ClassRooks* rook = new ClassRooks(i, j, false);
-					this->pointBoardStatus[i][j] = rook;
+				else if (boardStatus[i][j] == 4 || boardStatus[i][j]==11) {
+					this->pointBoardStatus[i][j] = new ClassRooks(i, j, isBlackOrRed);
 				}
-				else if (boardStatus[i][j] == 5) {
-					ClassHorses* hourse = new ClassHorses(i, j, false);
-					this->pointBoardStatus[i][j] = hourse;
+				else if (boardStatus[i][j] == 5 || boardStatus[i][j]==12) {
+					this->pointBoardStatus[i][j] = new ClassHorses(i, j, isBlackOrRed);
 				}
-				else if (boardStatus[i][j] == 6) {
-					ClassCannons* cannon = new ClassCannons(i, j, false);
-					this->pointBoardStatus[i][j] = cannon;
+				else if (boardStatus[i][j] == 6 || boardStatus[i][j]==13) {
+					this->pointBoardStatus[i][j] = new ClassCannons(i, j, isBlackOrRed);
 				}
-				else if (boardStatus[i][j] == 7) {
-					ClassSoldiers* soldier = new ClassSoldiers(i, j, false);
-					this->pointBoardStatus[i][j] = soldier;
-				}
-				else if (boardStatus[i][j] == 8) {
-					ClassGeneral* general = new ClassGeneral(i, j, true);
-					this->pointBoardStatus[i][j] = general;
-				}
-				else if (boardStatus[i][j] == 9) {
-					ClassGuard* guard = new ClassGuard(i, j, true);
-					this->pointBoardStatus[i][j] = guard;
-				}
-				else if (boardStatus[i][j] == 10) {
-					ClassMinister* minister = new ClassMinister(i, j, true);//changed (from "elephant" to "minister") [5/5,21:22]
-					this->pointBoardStatus[i][j] = minister;//changed (from "elephant" to "minister") [5/5,21:22]
-				}
-				else if (boardStatus[i][j] == 11) {
-					ClassRooks* rook = new ClassRooks(i, j, true);
-					this->pointBoardStatus[i][j] = rook;
-				}
-				else if (boardStatus[i][j] == 12) {
-					ClassHorses* hourse = new ClassHorses(i, j, true);
-					this->pointBoardStatus[i][j] = hourse;
-				}
-				else if (boardStatus[i][j] == 13) {
-					ClassCannons* cannon = new ClassCannons(i, j, true);
-					this->pointBoardStatus[i][j] = cannon;
-				}
-				else if (boardStatus[i][j] == 14) {
-					ClassSoldiers* soldier = new ClassSoldiers(i, j, true);
-					this->pointBoardStatus[i][j] = soldier;
+				else if (boardStatus[i][j] == 7 || boardStatus[i][j]==14) {
+					this->pointBoardStatus[i][j] = new ClassSoldiers(i, j, isBlackOrRed);
 				}
 				// 結束建立pointboardStatus
 			}

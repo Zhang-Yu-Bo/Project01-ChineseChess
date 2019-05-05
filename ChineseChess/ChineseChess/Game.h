@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <fstream>
 #include <string>
+#include <algorithm>
 #include "PieceClassIndex/Pieces.h"
 #include "PieceClassIndex/PieceClass.h"
 #include "MainMenu.h"
