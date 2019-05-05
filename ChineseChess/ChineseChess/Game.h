@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include "PieceClassIndex/Pieces.h"
+#include "PieceClassIndex/PieceClass.h"
 #include "MainMenu.h"
 
 #define KEYBOARD_UP 72

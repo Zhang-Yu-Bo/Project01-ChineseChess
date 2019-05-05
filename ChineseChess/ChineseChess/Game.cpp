@@ -121,11 +121,16 @@ namespace {
 
 Game::Game()
 {
+	// 初始化 (黑/紅) (0/1) 的回合
 	this->nowTurn = 0;
+	// 初始化 棋盤檔名
 	this->tableFileName = "Initial.txt";
+	// =====================初始化console控制元件=====================
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	cursorPosition.X = 0;	cursorPosition.Y = 0;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+	// =====================初始化console控制元件=====================
+	// 初始化 [boardStatus] 、 [pointBoardStatus]
 	for (int i = 0; i < 12; i++) {
 		this->boardStatus.push_back(vector<int>());
 		this->pointBoardStatus.push_back(vector<Pieces*>());
@@ -145,7 +150,9 @@ Game::~Game()
 void Game::showMenu() {
 	if (menu != NULL) {
 		menu->showMenu();
+		this->~Game();
 	}
+	
 }
 
 void Game::gameStart() {
@@ -174,50 +181,64 @@ void Game::gameStart() {
 
 	while (commandPress = _getch())
 	{
-		switch (commandPress)
-		{
-		case KEYBOARD_UP:
+		if (commandPress == KEYBOARD_UP) {
 			y -= 2;
-			break;
-		case KEYBOARD_DOWN:
+		}
+		else if (commandPress == KEYBOARD_DOWN) {
 			y += 2;
-			break;
-		case KEYBOARD_LEFT:
+		}
+		else if (commandPress == KEYBOARD_LEFT) {
 			x -= 4;
-			break;
-		case KEYBOARD_RIGHT:
+		}
+		else if (commandPress == KEYBOARD_RIGHT) {
 			x += 4;
-			break;
-		case KEYBOARD_LEFT_SHIFT:
+		}
+		else if (commandPress == KEYBOARD_LEFT_SHIFT) {
 
-			break;
-		case KEYBOARD_RIGHT_SHIFT:
+		}
+		else if (commandPress == KEYBOARD_RIGHT_SHIFT) {
 
-			break;
-		case KEYBOARD_ENTER:
+		}
+		else if (commandPress == KEYBOARD_ENTER) {
 			if (!isTakingPiece) {
-				virtualCoordinate.first = (x - 42) / 4 +1;	//col
-				virtualCoordinate.second = (y - 2) / 2 +1;	//row
-				if (this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] != 0
-					&& this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] != -1) {
-					isTakingPiece = true;
+				// 如果現在還沒拿起棋子時：
+				// console座標轉換為棋盤座標
+				virtualCoordinate.first = (x - 42) / 4 + 1;			//col
+				virtualCoordinate.second = (y - 2) / 2 + 1;			//row
+
+				if (this->nowTurn == 0) {
+					// 現在回合:黑手
+					if (this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] >= 1
+						&& this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] <= 7) {
+						isTakingPiece = true;
+					}
+					else {
+						cout << "\a";
+					}
 				}
-				else {
-					cout << "\a";
+				else if (this->nowTurn == 1) {
+					// 現在回合:紅手
+					if (this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] >= 8
+						&& this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] <= 14) {
+						isTakingPiece = true;
+					}
+					else {
+						cout << "\a";
+					}
 				}
+
 			}
 			else {
+				// 如果現在拿起棋子時：
 				cout << "\a";
 				isTakingPiece = false;
+				this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
 			}
 			//setColor(252, 0);	cout << "車";
-			break;
-		case KEYBOARD_ESCAPE:
+		}
+		else if (commandPress == KEYBOARD_ESCAPE) {
 			system("cls");
 			this->showMenu();
-			break;
-		default:
-			break;
 		}
 
 		x = (x > (42 + 32)) ? 42 : x;
@@ -230,14 +251,7 @@ void Game::gameStart() {
 
 void Game::setFileNameAndProcess() {
 	fstream inputStream;
-	for (int i = 0; i < 12; i++) {
-		for (int j = 0; j < 11; j++) {
-			if (i == 0 || j == 0 || i == 11 || j == 1) {
-				this->boardStatus[i][j] = -1;
-				this->pointBoardStatus[i][j] = NULL;
-			}
-		}
-	}
+	
 	inputStream.open(("boardText/" + this->tableFileName));
 	if (!inputStream)  // operator! is used here
 	{

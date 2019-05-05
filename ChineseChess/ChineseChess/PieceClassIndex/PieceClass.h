@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 #include "Pieces.h"
 #include<iostream>
 #include<vector>
 #include<algorithm>
 using namespace std;
-//=====´Ñ½LÃä¬É====================
+//=====æ£‹ç›¤é‚Šç•Œ====================
 
-//=====¤E®cÃä¬É====================
+//=====ä¹å®®é‚Šç•Œ====================
 const int palaceBlackI_UP = 0;
 const int palaceBlackI_DOWN = 4;
 const int palaceBlackJ_LEFT = 3;
@@ -15,29 +15,83 @@ const int palaceRedI_UP = 7;
 const int palaceRedI_DOWN = 11;
 const int palaceRedJ_LEFT = 3;
 const int palaceRedJ_RIGHT = 7;
-//=====ªe¬yÃä¬É====================
+//=====æ²³æµé‚Šç•Œ====================
 const int riverBlack = 5;
 const int riverRed = 6;
 #ifndef _PIECECLASS_H_
 #define _PIECECLASS_H_
 
-//=====¦UÃş´Ñ¤lÃş§O================
-class ClassGeneral :public Pieces {//±N¡B«Ó
+//=====å„é¡æ£‹å­é¡åˆ¥================
+class ClassGeneral :public Pieces {//å°‡ã€å¸¥
 public:
-	//«Øºc¤l¡A±µ¦¬ªì©l¦ì¸m¡B°}Àç
-	ClassGeneral(int i, int j, bool c) :Pieces(i, j, c) { code = 1; }
-	//¦¨­û¨ç¦¡
-	//ÂY¦^©Ò¦³¥i¯àªº²¾°Ê¥Øªº¦a(¤£¥]§t¦Y´Ñ)
-	virtual vector<COORDINATE> movable(const vector<vector<int>>&);//¤Gºûint vector
-	//ÂY¦^©Ò¦³¥i¥H¦Yªº´Ñ¤l¦ì¸m(¤£¥]§t²¾´Ñ)
-	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);//¤Gºûint vector
-	//­×§ïª«¥ó¦ì¸m¡A¥]§t¦Y´Ñ»P²¾´Ñ¡A¶·¶Ç¤J¥Øªº¦aindex¡A§t¨¾§b
+	//å»ºæ§‹å­ï¼Œæ¥æ”¶åˆå§‹ä½ç½®ã€é™£ç‡Ÿ
+	ClassGeneral(int i, int j, bool c) :Pieces(i, j, c) { 
+		code = (c) ? 1 + 7 : 1;
+	}
+	//æˆå“¡å‡½å¼
+	//æ“²å›æ‰€æœ‰å¯èƒ½çš„ç§»å‹•ç›®çš„åœ°(ä¸åŒ…å«åƒæ£‹)
+	virtual vector<COORDINATE> movable(const vector<vector<int>>&);//äºŒç¶­int vector
+	//æ“²å›æ‰€æœ‰å¯ä»¥åƒçš„æ£‹å­ä½ç½®(ä¸åŒ…å«ç§»æ£‹)
+	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);//äºŒç¶­int vector
+	//ä¿®æ”¹ç‰©ä»¶ä½ç½®ï¼ŒåŒ…å«åƒæ£‹èˆ‡ç§»æ£‹ï¼Œé ˆå‚³å…¥ç›®çš„åœ°indexï¼Œå«é˜²å‘†
 };
 //==================================================================================
 
-class ClassGuard :public Pieces {//¤h¡B¥K
+class ClassGuard :public Pieces {//å£«ã€ä»•
 public:
-	ClassGuard(int i, int j, bool c) :Pieces(i, j, c) { code = 2; }
+	ClassGuard(int i, int j, bool c) :Pieces(i, j, c) {
+		code = (c) ? 2 + 7 : 2;
+	}
+	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
+	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);
+};
+//==================================================================================
+
+class ClassElephant:public Pieces {//è±¡ã€ç›¸
+public:
+	ClassElephant(int i, int j, bool c) :Pieces(i, j, c) {
+		code = (c) ? 3 + 7 : 3;
+	}
+	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
+	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);
+};
+//==================================================================================
+
+class ClassRooks :public Pieces {//è»Šã€ä¿¥
+public:
+	ClassRooks(int i, int j, bool c) :Pieces(i, j, c) {
+		code = (c) ? 4 + 7 : 4;
+	}
+	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
+	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);
+};
+//==================================================================================
+
+class ClassHorses :public Pieces {//é¦¬ã€å‚Œ
+public:
+	ClassHorses(int i, int j, bool c) :Pieces(i, j, c) {
+		code = (c) ? 5 + 7 : 5;
+	}
+	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
+	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);
+};
+//==================================================================================
+
+class ClassCannons :public Pieces {//ç ²ã€ç‚®
+public:
+	ClassCannons(int i, int j, bool c) :Pieces(i, j, c) {
+		code = (c) ? 6 + 7 : 6;
+	}
+	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
+	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);
+};
+//==================================================================================
+
+class ClassSoldiers :public Pieces {//å’ã€å…µ
+public:
+	ClassSoldiers(int i, int j, bool c) :Pieces(i, j, c) {
+		code = (c) ? 7 + 7 : 7;
+	}
 	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
 	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);
 };
