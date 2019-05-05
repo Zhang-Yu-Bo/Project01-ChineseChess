@@ -299,7 +299,138 @@ vector<COORDINATE> ClassMinister::eatable(const vector<vector<int>> & boardStatu
 	return legalEat;
 }
 //===========================================================
-vector<COORDINATE> ClassRooks::movable(const vector<vector<int>>& boardStatus) {
+vector<COORDINATE> ClassRook::movable(const vector<vector<int>>& boardStatus) {
+	vector<COORDINATE> legalMove;
+	int i = position.first, j = position.second, k = 1;
+	if (identity == BLACK) {//黑方
+		//UP移動棋，不超過邊界且路徑上是空格
+		k = 1;
+		while (i - k > boardTop &&
+			(boardStatus[i - k][j] == 0)) {
+			legalMove.push_back(make_pair(i - k, j));
+			k++;
+		}
+		//DOWN
+		k = 1;
+		while (i + k < boardBottom &&
+			(boardStatus[i + k][j] == 0)) {
+			legalMove.push_back(make_pair(i + k, j));
+			k++;
+		}
+		//LEFT
+		k = 1;
+		while (j - k > boardLeft &&
+			(boardStatus[i][j - k] == 0)) {
+			legalMove.push_back(make_pair(i, j - k));
+			k++;
+		}
+		//RIGHT	
+		k = 1;
+		while (j + k < boardRight &&
+			(boardStatus[i][j + k] == 0)) {
+			legalMove.push_back(make_pair(i, j + k));
+			k++;
+		}
+	}
+	else if (identity == RED) {//紅方
+		//UP
+		k = 1;
+		while (i - k > boardTop &&
+			(boardStatus[i - k][j] == 0)) {
+			legalMove.push_back(make_pair(i - k, j));
+			k++;
+		}
+		//DOWN
+		k = 1;
+		while (i + k < boardBottom &&
+			(boardStatus[i + k][j] == 0)) {
+			legalMove.push_back(make_pair(i + k, j));
+			k++;
+		}
+		//LEFT	
+		k = 1;
+		while (j - k > boardLeft &&
+			(boardStatus[i][j - k] == 0)) {
+			legalMove.push_back(make_pair(i, j - k));
+			k++;
+		}
+		//RIGHT	
+		k = 1;
+		while (j + k < boardRight &&
+			(boardStatus[i][j + k] == 0)) {
+			legalMove.push_back(make_pair(i, j + k));
+			k++;
+		}
+	}
+	return legalMove;
+}
+vector<COORDINATE> ClassRook::eatable(const vector<vector<int>> & boardStatus) {
+	vector<COORDINATE> legalEat;
+	int i = position.first, j = position.second, k = 1;
+	if (identity == BLACK) {//黑方
+		//UP移動棋
+		k = 1;
+		while (i - k > boardTop &&
+			(boardStatus[i - k][j] == 0)) {
+			k++;
+		}
+		if (boardStatus[i - k][j] >= 8) legalEat.push_back(make_pair(i - k, j));
+		//DOWN
+		k = 1;
+		while (i + k < boardBottom &&
+			(boardStatus[i + k][j] == 0)) {
+			k++;
+		}
+		if (boardStatus[i + k][j] >= 8) legalEat.push_back(make_pair(i + k, j));
+		//LEFT
+		k = 1;
+		while (j - k > boardLeft &&
+			(boardStatus[i][j - k] == 0)) {
+			k++;
+		}
+		if (boardStatus[i][j - k] >= 8) legalEat.push_back(make_pair(i, j - k));
+		//RIGHT	
+		k = 1;
+		while (j + k < boardRight &&
+			(boardStatus[i][j + k] == 0)) {
+			k++;
+		}
+		if (boardStatus[i][j + k] >= 8) legalEat.push_back(make_pair(i, j + k));
+	}
+	else if (identity == RED) {//紅方
+		//UP
+		k = 1;
+		while (i - k > boardTop &&
+			(boardStatus[i - k][j] == 0)) {
+			k++;
+		}
+		if (boardStatus[i - k][j] <= 7 && boardStatus[i - k][j] >= 1) legalEat.push_back(make_pair(i - k, j));
+		//DOWN
+		k = 1;
+		while (i + k < boardBottom &&
+			(boardStatus[i + k][j] == 0)) {
+			k++;
+		}
+		if (boardStatus[i + k][j] <= 7 && boardStatus[i + k][j] >= 1) legalEat.push_back(make_pair(i + k, j));
+		//LEFT	
+		k = 1;
+		while (j - k > boardLeft &&
+			(boardStatus[i][j - k] == 0)) {
+			k++;
+		}
+		if (boardStatus[i][j - k] <= 7 && boardStatus[i][j - k] >= 1) legalEat.push_back(make_pair(i, j - k));
+		//RIGHT	
+		k = 1;
+		while (j + k < boardRight &&
+			(boardStatus[i][j + k] == 0)) {
+			k++;
+		}
+		if (boardStatus[i][j + k] <= 7 && boardStatus[i][j + k] >= 1) legalEat.push_back(make_pair(i, j + k));
+	}
+	return legalEat;
+}
+//===========================================================
+vector<COORDINATE> ClassHorse::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second;
 	if (identity == BLACK) {//黑方
@@ -348,7 +479,7 @@ vector<COORDINATE> ClassRooks::movable(const vector<vector<int>>& boardStatus) {
 	}
 	return legalMove;
 }
-vector<COORDINATE> ClassRooks::eatable(const vector<vector<int>> & boardStatus) {
+vector<COORDINATE> ClassHorse::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second;
 	if (identity == BLACK) {//黑方
@@ -398,106 +529,194 @@ vector<COORDINATE> ClassRooks::eatable(const vector<vector<int>> & boardStatus) 
 	return legalEat;
 }
 //===========================================================
-vector<COORDINATE> ClassHorses::movable(const vector<vector<int>>& boardStatus) {
+vector<COORDINATE> ClassCannon::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
-	int i = position.first, j = position.second;
+	int i = position.first, j = position.second, k = 1;
 	if (identity == BLACK) {//黑方
-		//UP移動棋，不超過palace且路徑上是空格
-		if (i - 1 > palaceBlackI_UP &&
-			(boardStatus[i - 1][j] == 0)) {
-			legalMove.push_back(make_pair(i - 1, j));
+		//UP移動棋，不超過邊界且路徑上是空格
+		k = 1;
+		while (i - k > boardTop &&
+			(boardStatus[i - k][j] == 0)) {
+			legalMove.push_back(make_pair(i - k, j));
+			k++;
 		}
 		//DOWN
-		if (i + 1 < palaceBlackI_DOWN &&
-			(boardStatus[i + 1][j] == 0)) {
-			legalMove.push_back(make_pair(i + 1, j));
+		k = 1;
+		while (i + k < boardBottom &&
+			(boardStatus[i + k][j] == 0)) {
+			legalMove.push_back(make_pair(i + k, j));
+			k++;
 		}
-		//LEFT	
-		if (j - 1 > palaceBlackJ_LEFT &&
-			(boardStatus[i][j - 1] == 0)) {
-			legalMove.push_back(make_pair(i, j - 1));
+		//LEFT
+		k = 1;
+		while (j - k > boardLeft &&
+			(boardStatus[i][j - k] == 0)) {
+			legalMove.push_back(make_pair(i, j - k));
+			k++;
 		}
 		//RIGHT	
-		if (j + 1 < palaceBlackJ_RIGHT &&
-			(boardStatus[i][j + 1] == 0)) {
-			legalMove.push_back(make_pair(i, j + 1));
+		k = 1;
+		while (j + k < boardRight &&
+			(boardStatus[i][j + k] == 0)) {
+			legalMove.push_back(make_pair(i, j + k));
+			k++;
 		}
 	}
 	else if (identity == RED) {//紅方
 		//UP
-		if (i - 1 > palaceRedI_UP &&
-			(boardStatus[i - 1][j] == 0)) {
-			legalMove.push_back(make_pair(i - 1, j));
+		k = 1;
+		while (i - k > boardTop &&
+			(boardStatus[i - k][j] == 0)) {
+			legalMove.push_back(make_pair(i - k, j));
+			k++;
 		}
 		//DOWN
-		if (i + 1 < palaceRedI_DOWN &&
-			(boardStatus[i + 1][j] == 0)) {
-			legalMove.push_back(make_pair(i + 1, j));
+		k = 1;
+		while (i + k < boardBottom &&
+			(boardStatus[i + k][j] == 0)) {
+			legalMove.push_back(make_pair(i + k, j));
+			k++;
 		}
 		//LEFT	
-		if (j - 1 > palaceRedJ_LEFT &&
-			(boardStatus[i][j - 1] == 0)) {
-			legalMove.push_back(make_pair(i, j - 1));
+		k = 1;
+		while (j - k > boardLeft &&
+			(boardStatus[i][j - k] == 0)) {
+			legalMove.push_back(make_pair(i, j - k));
+			k++;
 		}
 		//RIGHT	
-		if (j + 1 < palaceRedJ_RIGHT &&
-			(boardStatus[i][j + 1] == 0)) {
-			legalMove.push_back(make_pair(i, j + 1));
+		k = 1;
+		while (j + k < boardRight &&
+			(boardStatus[i][j + k] == 0)) {
+			legalMove.push_back(make_pair(i, j + k));
+			k++;
 		}
 	}
 	return legalMove;
 }
-vector<COORDINATE> ClassHorses::eatable(const vector<vector<int>> & boardStatus) {
+vector<COORDINATE> ClassCannon::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
-	int i = position.first, j = position.second;
+	int i = position.first, j = position.second, k = 1;
 	if (identity == BLACK) {//黑方
-		//UP吃棋，不超過palace且路徑上是敵軍
-		if (i - 1 > palaceBlackI_UP &&
-			(boardStatus[i - 1][j] >= 8)) {
-			legalEat.push_back(make_pair(i - 1, j));
+		//UP移動棋
+		k = 1;
+		while (i - k > boardTop &&
+			(boardStatus[i - k][j] == 0)) {
+			k++;
+		}
+		if (boardStatus[i - k][j] != -1) {
+			k++;
+			while (i - k > boardTop &&
+				(boardStatus[i - k][j] == 0)) {
+				k++;
+			}
+			if (boardStatus[i - k][j] >= 8) legalEat.push_back(make_pair(i - k, j));
 		}
 		//DOWN
-		if (i + 1 < palaceBlackI_DOWN &&
-			(boardStatus[i + 1][j] >= 8)) {
-			legalEat.push_back(make_pair(i + 1, j));
+		k = 1;
+		while (i + k < boardBottom &&
+			(boardStatus[i + k][j] == 0)) {
+			k++;
 		}
-		//LEFT	
-		if (j - 1 > palaceBlackJ_LEFT &&
-			(boardStatus[i][j - 1] >= 8)) {
-			legalEat.push_back(make_pair(i, j - 1));
+		if (boardStatus[i + k][j] != -1) {
+			k++;
+			while (i + k < boardBottom &&
+				(boardStatus[i + k][j] == 0)) {
+				k++;
+			}
+			if (boardStatus[i + k][j] >= 8) legalEat.push_back(make_pair(i + k, j));
+		}
+		//LEFT
+		k = 1;
+		while (j - k > boardLeft &&
+			(boardStatus[i][j - k] == 0)) {
+			k++;
+		}
+		if (boardStatus[i][j - k] != -1) {
+			k++;
+			while (j - k > boardLeft &&
+				(boardStatus[i][j - k] == 0)) {
+				k++;
+			}
+			if (boardStatus[i][j - k] >= 8) legalEat.push_back(make_pair(i, j - k));
 		}
 		//RIGHT	
-		if (j + 1 < palaceBlackJ_RIGHT &&
-			(boardStatus[i][j + 1] >= 8)) {
-			legalEat.push_back(make_pair(i, j + 1));
+		k = 1;
+		while (j + k < boardRight &&
+			(boardStatus[i][j + k] == 0)) {
+			k++;
+		}
+		if (boardStatus[i][j + k] != -1) {
+			k++;
+			while (j + k < boardRight &&
+				(boardStatus[i][j + k] == 0)) {
+				k++;
+			}
+			if (boardStatus[i][j + k] >= 8) legalEat.push_back(make_pair(i, j + k));
 		}
 	}
 	else if (identity == RED) {//紅方
 		//UP
-		if (i - 1 > palaceRedI_UP &&
-			(boardStatus[i - 1][j] <= 7 && boardStatus[i - 1][j] > 0)) {
-			legalEat.push_back(make_pair(i - 1, j));
+		k = 1;
+		while (i - k > boardTop &&
+			(boardStatus[i - k][j] == 0)) {
+			k++;
+		}
+		if (boardStatus[i - k][j] != -1) {
+			k++;
+			while (i - k > boardTop &&
+				(boardStatus[i - k][j] == 0)) {
+				k++;
+			}
+			if (boardStatus[i - k][j] <= 7 && boardStatus[i - k][j] >= 1) legalEat.push_back(make_pair(i - k, j));
 		}
 		//DOWN
-		if (i + 1 < palaceRedI_DOWN &&
-			(boardStatus[i + 1][j] <= 7 && boardStatus[i + 1][j] > 0)) {
-			legalEat.push_back(make_pair(i + 1, j));
+		k = 1;
+		while (i + k < boardBottom &&
+			(boardStatus[i + k][j] == 0)) {
+			k++;
+		}
+		if (boardStatus[i + k][j] != -1) {
+			k++;
+			while (i + k < boardBottom &&
+				(boardStatus[i + k][j] == 0)) {
+				k++;
+			}
+			if (boardStatus[i + k][j] <= 7 && boardStatus[i + k][j] >= 1) legalEat.push_back(make_pair(i + k, j));
 		}
 		//LEFT	
-		if (j - 1 > palaceRedJ_LEFT &&
-			(boardStatus[i][j - 1] <= 7 && boardStatus[i][j - 1] > 0)) {
-			legalEat.push_back(make_pair(i, j - 1));
+		k = 1;
+		while (j - k > boardLeft &&
+			(boardStatus[i][j - k] == 0)) {
+			k++;
+		}
+		if (boardStatus[i][j - k] != -1) {
+			k++;
+			while (j - k > boardLeft &&
+				(boardStatus[i][j - k] == 0)) {
+				k++;
+			}
+			if (boardStatus[i][j - k] <= 7 && boardStatus[i][j - k] >= 1) legalEat.push_back(make_pair(i, j - k));
 		}
 		//RIGHT	
-		if (j + 1 < palaceRedJ_RIGHT &&
-			(boardStatus[i][j + 1] <= 7 && boardStatus[i][j + 1] > 0)) {
-			legalEat.push_back(make_pair(i, j + 1));
+		k = 1;
+		while (j + k < boardRight &&
+			(boardStatus[i][j + k] == 0)) {
+			k++;
+		}
+		if (boardStatus[i][j + k] != -1) {
+			k++;
+			while (j + k < boardRight &&
+				(boardStatus[i][j + k] == 0)) {
+				k++;
+			}
+			if (boardStatus[i][j + k] <= 7 && boardStatus[i][j + k] >= 1) legalEat.push_back(make_pair(i, j + k));
 		}
 	}
 	return legalEat;
 }
 //===========================================================
-vector<COORDINATE> ClassCannons::movable(const vector<vector<int>>& boardStatus) {
+vector<COORDINATE> ClassSoldier::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second;
 	if (identity == BLACK) {//黑方
@@ -546,106 +765,7 @@ vector<COORDINATE> ClassCannons::movable(const vector<vector<int>>& boardStatus)
 	}
 	return legalMove;
 }
-vector<COORDINATE> ClassCannons::eatable(const vector<vector<int>> & boardStatus) {
-	vector<COORDINATE> legalEat;
-	int i = position.first, j = position.second;
-	if (identity == BLACK) {//黑方
-		//UP吃棋，不超過palace且路徑上是敵軍
-		if (i - 1 > palaceBlackI_UP &&
-			(boardStatus[i - 1][j] >= 8)) {
-			legalEat.push_back(make_pair(i - 1, j));
-		}
-		//DOWN
-		if (i + 1 < palaceBlackI_DOWN &&
-			(boardStatus[i + 1][j] >= 8)) {
-			legalEat.push_back(make_pair(i + 1, j));
-		}
-		//LEFT	
-		if (j - 1 > palaceBlackJ_LEFT &&
-			(boardStatus[i][j - 1] >= 8)) {
-			legalEat.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceBlackJ_RIGHT &&
-			(boardStatus[i][j + 1] >= 8)) {
-			legalEat.push_back(make_pair(i, j + 1));
-		}
-	}
-	else if (identity == RED) {//紅方
-		//UP
-		if (i - 1 > palaceRedI_UP &&
-			(boardStatus[i - 1][j] <= 7 && boardStatus[i - 1][j] > 0)) {
-			legalEat.push_back(make_pair(i - 1, j));
-		}
-		//DOWN
-		if (i + 1 < palaceRedI_DOWN &&
-			(boardStatus[i + 1][j] <= 7 && boardStatus[i + 1][j] > 0)) {
-			legalEat.push_back(make_pair(i + 1, j));
-		}
-		//LEFT	
-		if (j - 1 > palaceRedJ_LEFT &&
-			(boardStatus[i][j - 1] <= 7 && boardStatus[i][j - 1] > 0)) {
-			legalEat.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceRedJ_RIGHT &&
-			(boardStatus[i][j + 1] <= 7 && boardStatus[i][j + 1] > 0)) {
-			legalEat.push_back(make_pair(i, j + 1));
-		}
-	}
-	return legalEat;
-}
-//===========================================================
-vector<COORDINATE> ClassSoldiers::movable(const vector<vector<int>>& boardStatus) {
-	vector<COORDINATE> legalMove;
-	int i = position.first, j = position.second;
-	if (identity == BLACK) {//黑方
-		//UP移動棋，不超過palace且路徑上是空格
-		if (i - 1 > palaceBlackI_UP &&
-			(boardStatus[i - 1][j] == 0)) {
-			legalMove.push_back(make_pair(i - 1, j));
-		}
-		//DOWN
-		if (i + 1 < palaceBlackI_DOWN &&
-			(boardStatus[i + 1][j] == 0)) {
-			legalMove.push_back(make_pair(i + 1, j));
-		}
-		//LEFT	
-		if (j - 1 > palaceBlackJ_LEFT &&
-			(boardStatus[i][j - 1] == 0)) {
-			legalMove.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceBlackJ_RIGHT &&
-			(boardStatus[i][j + 1] == 0)) {
-			legalMove.push_back(make_pair(i, j + 1));
-		}
-	}
-	else if (identity == RED) {//紅方
-		//UP
-		if (i - 1 > palaceRedI_UP &&
-			(boardStatus[i - 1][j] == 0)) {
-			legalMove.push_back(make_pair(i - 1, j));
-		}
-		//DOWN
-		if (i + 1 < palaceRedI_DOWN &&
-			(boardStatus[i + 1][j] == 0)) {
-			legalMove.push_back(make_pair(i + 1, j));
-		}
-		//LEFT	
-		if (j - 1 > palaceRedJ_LEFT &&
-			(boardStatus[i][j - 1] == 0)) {
-			legalMove.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceRedJ_RIGHT &&
-			(boardStatus[i][j + 1] == 0)) {
-			legalMove.push_back(make_pair(i, j + 1));
-		}
-	}
-	return legalMove;
-}
-vector<COORDINATE> ClassSoldiers::eatable(const vector<vector<int>> & boardStatus) {
+vector<COORDINATE> ClassSoldier::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second;
 	if (identity == BLACK) {//黑方

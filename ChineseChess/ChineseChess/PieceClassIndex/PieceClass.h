@@ -60,9 +60,9 @@ public:
 };
 //==================================================================================
 
-class ClassRooks :public Pieces {//車、俥
+class ClassRook :public Pieces {//車、俥
 public:
-	ClassRooks(int i, int j, bool c) :Pieces(i, j, c) {
+	ClassRook(int i, int j, bool c) :Pieces(i, j, c) {
 		code = (c) ? 4 + 7 : 4;
 	}
 	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
@@ -70,9 +70,9 @@ public:
 };
 //==================================================================================
 
-class ClassHorses :public Pieces {//馬、傌
+class ClassHorse :public Pieces {//馬、傌
 public:
-	ClassHorses(int i, int j, bool c) :Pieces(i, j, c) {
+	ClassHorse(int i, int j, bool c) :Pieces(i, j, c) {
 		code = (c) ? 5 + 7 : 5;
 	}
 	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
@@ -80,9 +80,9 @@ public:
 };
 //==================================================================================
 
-class ClassCannons :public Pieces {//砲、炮
+class ClassCannon :public Pieces {//包、炮
 public:
-	ClassCannons(int i, int j, bool c) :Pieces(i, j, c) {
+	ClassCannon(int i, int j, bool c) :Pieces(i, j, c) {
 		code = (c) ? 6 + 7 : 6;
 	}
 	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
@@ -90,9 +90,9 @@ public:
 };
 //==================================================================================
 
-class ClassSoldiers :public Pieces {//卒、兵
+class ClassSoldier :public Pieces {//卒、兵
 public:
-	ClassSoldiers(int i, int j, bool c) :Pieces(i, j, c) {
+	ClassSoldier(int i, int j, bool c) :Pieces(i, j, c) {
 		code = (c) ? 7 + 7 : 7;
 	}
 	virtual vector<COORDINATE> movable(const vector<vector<int>>&);

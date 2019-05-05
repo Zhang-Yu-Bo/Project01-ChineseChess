@@ -324,16 +324,16 @@ void Game::setFileNameAndProcess() {
 					this->pointBoardStatus[i][j] = new ClassMinister(i, j, isBlackOrRed);
 				}
 				else if (boardStatus[i][j] == 4 || boardStatus[i][j]==11) {
-					this->pointBoardStatus[i][j] = new ClassRooks(i, j, isBlackOrRed);
+					this->pointBoardStatus[i][j] = new ClassRook(i, j, isBlackOrRed);
 				}
 				else if (boardStatus[i][j] == 5 || boardStatus[i][j]==12) {
-					this->pointBoardStatus[i][j] = new ClassHorses(i, j, isBlackOrRed);
+					this->pointBoardStatus[i][j] = new ClassHorse(i, j, isBlackOrRed);
 				}
 				else if (boardStatus[i][j] == 6 || boardStatus[i][j]==13) {
-					this->pointBoardStatus[i][j] = new ClassCannons(i, j, isBlackOrRed);
+					this->pointBoardStatus[i][j] = new ClassCannon(i, j, isBlackOrRed);
 				}
 				else if (boardStatus[i][j] == 7 || boardStatus[i][j]==14) {
-					this->pointBoardStatus[i][j] = new ClassSoldiers(i, j, isBlackOrRed);
+					this->pointBoardStatus[i][j] = new ClassSoldier(i, j, isBlackOrRed);
 				}
 				// 結束建立pointboardStatus
 			}
