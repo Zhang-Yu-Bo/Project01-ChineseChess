@@ -279,8 +279,8 @@ void Game::setFileNameAndProcess() {
 					this->pointBoardStatus[i][j] = guard;
 				}
 				else if (boardStatus[i][j] == 3) {
-					ClassElephant* elephant = new ClassElephant(i, j, false);
-					this->pointBoardStatus[i][j] = elephant;
+					ClassMinister* minister = new ClassMinister(i, j, false);//changed (from "elephant" to "minister") [5/5,21:22]
+					this->pointBoardStatus[i][j] = minister;//changed (from "elephant" to "minister") [5/5,21:22]
 				}
 				else if (boardStatus[i][j] == 4) {
 					ClassRooks* rook = new ClassRooks(i, j, false);
@@ -307,8 +307,8 @@ void Game::setFileNameAndProcess() {
 					this->pointBoardStatus[i][j] = guard;
 				}
 				else if (boardStatus[i][j] == 10) {
-					ClassElephant* elephant = new ClassElephant(i, j, true);
-					this->pointBoardStatus[i][j] = elephant;
+					ClassMinister* minister = new ClassMinister(i, j, true);//changed (from "elephant" to "minister") [5/5,21:22]
+					this->pointBoardStatus[i][j] = minister;//changed (from "elephant" to "minister") [5/5,21:22]
 				}
 				else if (boardStatus[i][j] == 11) {
 					ClassRooks* rook = new ClassRooks(i, j, true);

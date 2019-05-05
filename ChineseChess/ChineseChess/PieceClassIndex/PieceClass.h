@@ -5,7 +5,10 @@
 #include<algorithm>
 using namespace std;
 //=====棋盤邊界====================
-
+const int boardTop = 0;
+const int boardBottom = 11;
+const int boardLeft = 0;
+const int boardRight = 10;
 //=====九宮邊界====================
 const int palaceBlackI_UP = 0;
 const int palaceBlackI_DOWN = 4;
@@ -16,8 +19,8 @@ const int palaceRedI_DOWN = 11;
 const int palaceRedJ_LEFT = 3;
 const int palaceRedJ_RIGHT = 7;
 //=====河流邊界====================
-const int riverBlack = 5;
-const int riverRed = 6;
+const int riverBlack = 6;
+const int riverRed = 5;
 #ifndef _PIECECLASS_H_
 #define _PIECECLASS_H_
 
@@ -47,9 +50,9 @@ public:
 };
 //==================================================================================
 
-class ClassElephant:public Pieces {//象、相
+class ClassMinister:public Pieces {//象、相
 public:
-	ClassElephant(int i, int j, bool c) :Pieces(i, j, c) {
+	ClassMinister(int i, int j, bool c) :Pieces(i, j, c) {
 		code = (c) ? 3 + 7 : 3;
 	}
 	virtual vector<COORDINATE> movable(const vector<vector<int>>&);
