@@ -211,6 +211,9 @@ void Game::gameStart() {
 					if (this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] >= 1
 						&& this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] <= 7) {
 						isTakingPiece = true;
+						//setConsoleCursorCoordinate(2, 1);
+						//cout << this->pointBoardStatus[virtualCoordinate.second][virtualCoordinate.first];
+						//cout << this->boardStatus[virtualCoordinate.second][virtualCoordinate.first];
 					}
 					else {
 						cout << "\a";
@@ -221,6 +224,9 @@ void Game::gameStart() {
 					if (this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] >= 8
 						&& this->boardStatus[virtualCoordinate.second][virtualCoordinate.first] <= 14) {
 						isTakingPiece = true;
+						//setConsoleCursorCoordinate(2, 1);
+						//cout << this->pointBoardStatus[virtualCoordinate.second][virtualCoordinate.first];
+						//cout << this->boardStatus[virtualCoordinate.second][virtualCoordinate.first];
 					}
 					else {
 						cout << "\a";
@@ -263,6 +269,64 @@ void Game::setFileNameAndProcess() {
 		for (int i = 1; i < 11; i++) {
 			for (int j = 1; j < 10; j++) {
 				inputStream >> boardStatus[i][j];
+				// 建立pointboardStatus
+				if (boardStatus[i][j] == 1) {
+					ClassGeneral* general = new ClassGeneral(i, j, false);
+					this->pointBoardStatus[i][j] = general;
+				}
+				else if (boardStatus[i][j] == 2) {
+					ClassGuard* guard = new ClassGuard(i, j, false);
+					this->pointBoardStatus[i][j] = guard;
+				}
+				else if (boardStatus[i][j] == 3) {
+					ClassElephant* elephant = new ClassElephant(i, j, false);
+					this->pointBoardStatus[i][j] = elephant;
+				}
+				else if (boardStatus[i][j] == 4) {
+					ClassRooks* rook = new ClassRooks(i, j, false);
+					this->pointBoardStatus[i][j] = rook;
+				}
+				else if (boardStatus[i][j] == 5) {
+					ClassHorses* hourse = new ClassHorses(i, j, false);
+					this->pointBoardStatus[i][j] = hourse;
+				}
+				else if (boardStatus[i][j] == 6) {
+					ClassCannons* cannon = new ClassCannons(i, j, false);
+					this->pointBoardStatus[i][j] = cannon;
+				}
+				else if (boardStatus[i][j] == 7) {
+					ClassSoldiers* soldier = new ClassSoldiers(i, j, false);
+					this->pointBoardStatus[i][j] = soldier;
+				}
+				else if (boardStatus[i][j] == 8) {
+					ClassGeneral* general = new ClassGeneral(i, j, true);
+					this->pointBoardStatus[i][j] = general;
+				}
+				else if (boardStatus[i][j] == 9) {
+					ClassGuard* guard = new ClassGuard(i, j, true);
+					this->pointBoardStatus[i][j] = guard;
+				}
+				else if (boardStatus[i][j] == 10) {
+					ClassElephant* elephant = new ClassElephant(i, j, true);
+					this->pointBoardStatus[i][j] = elephant;
+				}
+				else if (boardStatus[i][j] == 11) {
+					ClassRooks* rook = new ClassRooks(i, j, true);
+					this->pointBoardStatus[i][j] = rook;
+				}
+				else if (boardStatus[i][j] == 12) {
+					ClassHorses* hourse = new ClassHorses(i, j, true);
+					this->pointBoardStatus[i][j] = hourse;
+				}
+				else if (boardStatus[i][j] == 13) {
+					ClassCannons* cannon = new ClassCannons(i, j, true);
+					this->pointBoardStatus[i][j] = cannon;
+				}
+				else if (boardStatus[i][j] == 14) {
+					ClassSoldiers* soldier = new ClassSoldiers(i, j, true);
+					this->pointBoardStatus[i][j] = soldier;
+				}
+				// 結束建立pointboardStatus
 			}
 		}
 		inputStream >> this->nowTurn;
