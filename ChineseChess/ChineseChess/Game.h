@@ -61,6 +61,8 @@ public:
 private:
 	// function
 	void setFileNameAndProcess();
+	void showTurn();
+	void showChoice(int choice);
 	// 
 	int nowTurn;
 	string tableFileName;

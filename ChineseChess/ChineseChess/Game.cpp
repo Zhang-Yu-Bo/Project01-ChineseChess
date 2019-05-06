@@ -79,7 +79,7 @@ namespace {
 	// Intent:設置console游(光)標cursor 位置
 	// Pre:int [x]、[y]，左上角為(0,0)			/// (42,2)為棋盤內可移動的最左上角
 	// Post:無
-	void setConsoleCursorCoordinate(int x = 42, int y = 2) {
+	void setConsoleCursorCoordinate(int x = 42, int y = 1) {
 		cursorPosition.X = x;	cursorPosition.Y = y;
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 	}
@@ -256,6 +256,9 @@ void Game::gameStart() {
 	// 顯示光標(Cursor)
 	cursorVisiable(true);
 
+	// 顯示提示，現在回合
+	this->showTurn();
+
 	int commandPress, x = 42, y = 2;
 	setConsoleCursorCoordinate(42, 2);
 	bool isTakingPiece = false;
@@ -297,6 +300,9 @@ void Game::gameStart() {
 						&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 7) {
 						isTakingPiece = true;
 
+						// 顯示提示，選取棋子
+						this->showChoice(this->boardStatus[virtualCoordinate.first][virtualCoordinate.second]);
+
 						// 繪製可走/吃範圍
 						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
 						whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
@@ -324,6 +330,9 @@ void Game::gameStart() {
 					if (this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] >= 8
 						&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 14) {
 						isTakingPiece = true;
+
+						// 顯示提示，選取棋子
+						this->showChoice(this->boardStatus[virtualCoordinate.first][virtualCoordinate.second]);
 						
 						// 繪製可走/吃範圍
 						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
@@ -359,10 +368,15 @@ void Game::gameStart() {
 					isTakingPiece = false;
 					setConsoleCursorCoordinate(0, 1);
 					printBoard(this->boardStatus);
+					// 顯示提示，現在回合，選取棋子
+					this->showTurn();
+					this->showChoice(0);
 				}
 				else {
 					bool isSuccess = false;
-					isSuccess = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->MoveAndEat(
+					isSuccess = this->pointBoardStatus[virtualCoordinate.first]
+						[virtualCoordinate.second]
+					->MoveAndEat(
 						destinationCoordinate,
 						this->boardStatus,
 						this->pointBoardStatus
@@ -372,6 +386,9 @@ void Game::gameStart() {
 						isTakingPiece = false;
 						this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
 						printBoardNoSpace(this->boardStatus, 42, 1);
+						// 顯示提示，現在回合，選取棋子
+						this->showTurn();
+						this->showChoice(0);
 					}
 					else {
 						cout << "\a";
@@ -434,5 +451,41 @@ void Game::setFileNameAndProcess() {
 		}
 		inputStream >> this->nowTurn;
 		inputStream.close();
+	}
+}
+
+void Game::showTurn() {
+	setConsoleCursorCoordinate(90, 5);
+	setColor(27);
+	cout << "現在輪到　";
+	if (this->nowTurn == 1) {
+		setColor(76);
+		cout << "紅色方";
+	}
+	else {
+		setColor(128);
+		cout << "黑色方";
+	}
+	setColor(27);
+	cout << "　下棋";
+}
+
+void Game::showChoice(int choice) {
+	setConsoleCursorCoordinate(96, 7);
+	if (choice == 0) {
+		setColor(7);
+		cout << "　　　　　　";
+	}
+	else {
+		setColor(27);
+		cout << "您選擇了　";
+		if (this->nowTurn == 1) {
+			setColor(76);
+			printChess(choice);
+		}
+		else {
+			setColor(128);
+			printChess(choice);
+		}
 	}
 }
