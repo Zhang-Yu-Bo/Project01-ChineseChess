@@ -166,7 +166,9 @@ Game::Game()
 	// 初始化 (黑/紅) (0/1) 的回合
 	this->nowTurn = 0;
 	// 初始化 棋盤檔名
-	this->tableFileName = "Initial.txt";
+	//this->tableFileName = "Initial.txt";
+	//this->tableFileName = "Check.txt";
+	this->tableFileName = "Test.txt";
 	// =====================初始化console控制元件=====================
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	cursorPosition.X = 0;	cursorPosition.Y = 0;
