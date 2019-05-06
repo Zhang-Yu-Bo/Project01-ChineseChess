@@ -433,97 +433,112 @@ vector<COORDINATE> ClassRook::eatable(const vector<vector<int>> & boardStatus) {
 vector<COORDINATE> ClassHorse::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//黑方
-		//UP移動棋，不超過palace且路徑上是空格
-		if (i - 1 > palaceBlackI_UP &&
-			(boardStatus[i - 1][j] == 0)) {
-			legalMove.push_back(make_pair(i - 1, j));
-		}
-		//DOWN
-		if (i + 1 < palaceBlackI_DOWN &&
-			(boardStatus[i + 1][j] == 0)) {
-			legalMove.push_back(make_pair(i + 1, j));
-		}
-		//LEFT	
-		if (j - 1 > palaceBlackJ_LEFT &&
-			(boardStatus[i][j - 1] == 0)) {
-			legalMove.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceBlackJ_RIGHT &&
-			(boardStatus[i][j + 1] == 0)) {
-			legalMove.push_back(make_pair(i, j + 1));
+	if ((i - 1) >= 1 && (i - 1) <= 10 && j >= 1 && j <= 9) {									//上方
+		if (boardStatus[i - 1][j] == 0) {
+			if ((i - 2) >= 1 && (i - 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//上二左
+				if (boardStatus[i - 2][j - 1] == 0)
+					legalMove.push_back(make_pair(i - 2, j - 1));
+			}
+			if ((i - 2) >= 1 && (i - 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//上二右
+				if (boardStatus[i - 2][j + 1] == 0)
+					legalMove.push_back(make_pair(i - 2, j + 1));
+			}
 		}
 	}
-	else if (identity == RED) {//紅方
-		//UP
-		if (i - 1 > palaceRedI_UP &&
-			(boardStatus[i - 1][j] == 0)) {
-			legalMove.push_back(make_pair(i - 1, j));
+	if ((i + 1) >= 1 && (i + 1) <= 10 && j >= 1 && j <= 9) {									//下方
+		if (boardStatus[i + 1][j] == 0) {
+			if ((i + 2) >= 1 && (i + 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//下二左
+				if (boardStatus[i + 2][j - 1] == 0)
+					legalMove.push_back(make_pair(i + 2, j - 1));
+			}
+			if ((i + 2) >= 1 && (i + 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//下二右
+				if (boardStatus[i + 2][j + 1] == 0)
+					legalMove.push_back(make_pair(i + 2, j + 1));
+			}
 		}
-		//DOWN
-		if (i + 1 < palaceRedI_DOWN &&
-			(boardStatus[i + 1][j] == 0)) {
-			legalMove.push_back(make_pair(i + 1, j));
+	}
+	if (i >= 1 && i <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {									//左方
+		if (boardStatus[i][j - 1] == 0) {
+			if ((i - 1) >= 1 && (i - 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//上左二
+				if (boardStatus[i - 1][j - 2] == 0)
+					legalMove.push_back(make_pair(i - 1, j - 2));
+			}
+			if ((i + 1) >= 1 && (i + 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//下左二
+				if (boardStatus[i + 1][j - 2] == 0)
+					legalMove.push_back(make_pair(i + 1, j - 2));
+			}
 		}
-		//LEFT	
-		if (j - 1 > palaceRedJ_LEFT &&
-			(boardStatus[i][j - 1] == 0)) {
-			legalMove.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceRedJ_RIGHT &&
-			(boardStatus[i][j + 1] == 0)) {
-			legalMove.push_back(make_pair(i, j + 1));
+	}
+	if (i >= 1 && i <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {									//右方
+		if (boardStatus[i][j + 1] == 0) {
+			if ((i - 1) >= 1 && (i - 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//上右二
+				if (boardStatus[i - 1][j + 2] == 0)
+					legalMove.push_back(make_pair(i - 1, j + 2));
+			}
+			if ((i + 1) >= 1 && (i + 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//下右二
+				if (boardStatus[i + 1][j + 2] == 0)
+					legalMove.push_back(make_pair(i + 1, j + 2));
+			}
 		}
 	}
 	return legalMove;
 }
-vector<COORDINATE> ClassHorse::eatable(const vector<vector<int>> & boardStatus) {
+vector<COORDINATE> ClassHorse::eatable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second;
+	int lowBound = 0, upBound = 0;
 	if (identity == BLACK) {//黑方
-		//UP吃棋，不超過palace且路徑上是敵軍
-		if (i - 1 > palaceBlackI_UP &&
-			(boardStatus[i - 1][j] >= 8)) {
-			legalEat.push_back(make_pair(i - 1, j));
-		}
-		//DOWN
-		if (i + 1 < palaceBlackI_DOWN &&
-			(boardStatus[i + 1][j] >= 8)) {
-			legalEat.push_back(make_pair(i + 1, j));
-		}
-		//LEFT	
-		if (j - 1 > palaceBlackJ_LEFT &&
-			(boardStatus[i][j - 1] >= 8)) {
-			legalEat.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceBlackJ_RIGHT &&
-			(boardStatus[i][j + 1] >= 8)) {
-			legalEat.push_back(make_pair(i, j + 1));
-		}
+		lowBound = 8;	upBound = 14;
 	}
 	else if (identity == RED) {//紅方
-		//UP
-		if (i - 1 > palaceRedI_UP &&
-			(boardStatus[i - 1][j] <= 7 && boardStatus[i - 1][j] > 0)) {
-			legalEat.push_back(make_pair(i - 1, j));
+		lowBound = 1;	upBound = 7;
+	}
+	if ((i - 1) >= 1 && (i - 1) <= 10 && j >= 1 && j <= 9) {									//上方
+		if (boardStatus[i - 1][j] == 0) {
+			if ((i - 2) >= 1 && (i - 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//上二左
+				if (boardStatus[i - 2][j - 1] >= lowBound && boardStatus[i - 2][j - 1] <= upBound)
+					legalEat.push_back(make_pair(i - 2, j - 1));
+			}
+			if ((i - 2) >= 1 && (i - 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//上二右
+				if (boardStatus[i - 2][j + 1] >= lowBound && boardStatus[i - 2][j + 1] <= upBound)
+					legalEat.push_back(make_pair(i - 2, j + 1));
+			}
 		}
-		//DOWN
-		if (i + 1 < palaceRedI_DOWN &&
-			(boardStatus[i + 1][j] <= 7 && boardStatus[i + 1][j] > 0)) {
-			legalEat.push_back(make_pair(i + 1, j));
+	}
+	if ((i + 1) >= 1 && (i + 1) <= 10 && j >= 1 && j <= 9) {									//下方
+		if (boardStatus[i + 1][j] == 0) {
+			if ((i + 2) >= 1 && (i + 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//下二左
+				if (boardStatus[i + 2][j - 1] >= lowBound && boardStatus[i + 2][j - 1] <= upBound)
+					legalEat.push_back(make_pair(i + 2, j - 1));
+			}
+			if ((i + 2) >= 1 && (i + 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//下二右
+				if (boardStatus[i + 2][j + 1] >= lowBound && boardStatus[i + 2][j + 1] <= upBound)
+					legalEat.push_back(make_pair(i + 2, j + 1));
+			}
 		}
-		//LEFT	
-		if (j - 1 > palaceRedJ_LEFT &&
-			(boardStatus[i][j - 1] <= 7 && boardStatus[i][j - 1] > 0)) {
-			legalEat.push_back(make_pair(i, j - 1));
+	}
+	if (i >= 1 && i <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {									//左方
+		if (boardStatus[i][j - 1] == 0) {
+			if ((i - 1) >= 1 && (i - 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//上左二
+				if (boardStatus[i - 1][j - 2] >= lowBound && boardStatus[i - 1][j - 2] <= upBound)
+					legalEat.push_back(make_pair(i - 1, j - 2));
+			}
+			if ((i + 1) >= 1 && (i + 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//下左二
+				if (boardStatus[i + 1][j - 2] >= lowBound && boardStatus[i + 1][j - 2] <= upBound)
+					legalEat.push_back(make_pair(i + 1, j - 2));
+			}
 		}
-		//RIGHT	
-		if (j + 1 < palaceRedJ_RIGHT &&
-			(boardStatus[i][j + 1] <= 7 && boardStatus[i][j + 1] > 0)) {
-			legalEat.push_back(make_pair(i, j + 1));
+	}
+	if (i >= 1 && i <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {									//右方
+		if (boardStatus[i][j + 1] == 0) {
+			if ((i - 1) >= 1 && (i - 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//上右二
+				if (boardStatus[i - 1][j + 2] >= lowBound && boardStatus[i - 1][j + 2] <= upBound)
+					legalEat.push_back(make_pair(i - 1, j + 2));
+			}
+			if ((i + 1) >= 1 && (i + 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//下右二
+				if (boardStatus[i + 1][j + 2] >= lowBound && boardStatus[i + 1][j + 2] <= upBound)
+					legalEat.push_back(make_pair(i + 1, j + 2));
+			}
 		}
 	}
 	return legalEat;
