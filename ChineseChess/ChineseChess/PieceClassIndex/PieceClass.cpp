@@ -1,12 +1,12 @@
-#include "PieceClass.h"
+Ôªø#include "PieceClass.h"
 
 vector<vector<Pieces*>> pieceStatus;
-//===±N/´”========================================================
+//===Â∞á/Â∏•========================================================
 vector<COORDINATE> ClassGeneral::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP≤æ∞ ¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨O™≈ÆÊ
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UPÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅépalace‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		if (i - 1 > palaceBlackI_UP &&
 			(boardStatus[i - 1][j] == 0)) {
 			legalMove.push_back(make_pair(i - 1, j));
@@ -27,7 +27,7 @@ vector<COORDINATE> ClassGeneral::movable(const vector<vector<int>>& boardStatus)
 			legalMove.push_back(make_pair(i, j + 1));
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		//UP
 		if (i - 1 > palaceRedI_UP &&
 			(boardStatus[i - 1][j] == 0)) {
@@ -54,8 +54,8 @@ vector<COORDINATE> ClassGeneral::movable(const vector<vector<int>>& boardStatus)
 vector<COORDINATE> ClassGeneral::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP¶Y¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨Oºƒ≠x
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UPÂêÉÊ£ãÔºå‰∏çË∂ÖÈÅépalace‰∏îË∑ØÂæë‰∏äÊòØÊïµËªç
 		if (i - 1 > palaceBlackI_UP &&
 			(boardStatus[i - 1][j] >= 8)) {
 			legalEat.push_back(make_pair(i - 1, j));
@@ -76,7 +76,7 @@ vector<COORDINATE> ClassGeneral::eatable(const vector<vector<int>> & boardStatus
 			legalEat.push_back(make_pair(i, j + 1));
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		//UP
 		if (i - 1 > palaceRedI_UP &&
 			(boardStatus[i - 1][j] <= 7 && boardStatus[i - 1][j] > 0)) {
@@ -100,12 +100,12 @@ vector<COORDINATE> ClassGeneral::eatable(const vector<vector<int>> & boardStatus
 	}
 	return legalEat;
 }
-//===§h/•K========================================================
+//===Â£´/‰ªï========================================================
 vector<COORDINATE> ClassGuard::movable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP-RIGHT≤æ∞ ¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨O™≈ÆÊ
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UP-RIGHTÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅépalace‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		if (i - 1 > palaceBlackI_UP && j + 1 < palaceBlackJ_RIGHT &&
 			(boardStatus[i - 1][j + 1] == 0)) {
 			legalMove.push_back(make_pair(i - 1, j + 1));
@@ -126,8 +126,8 @@ vector<COORDINATE> ClassGuard::movable(const vector<vector<int>> & boardStatus) 
 			legalMove.push_back(make_pair(i - 1, j - 1));
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
-		//UP-RIGHT≤æ∞ ¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨O™≈ÆÊ
+	else if (identity == RED) {//Á¥ÖÊñπ
+		//UP-RIGHTÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅépalace‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		if (i - 1 > palaceRedI_UP && j + 1 < palaceRedJ_RIGHT &&
 			(boardStatus[i - 1][j + 1] == 0)) {
 			legalMove.push_back(make_pair(i - 1, j + 1));
@@ -153,8 +153,8 @@ vector<COORDINATE> ClassGuard::movable(const vector<vector<int>> & boardStatus) 
 vector<COORDINATE> ClassGuard::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP-RIGHT≤æ∞ ¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨Oºƒ≠x
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UP-RIGHTÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅépalace‰∏îË∑ØÂæë‰∏äÊòØÊïµËªç
 		if (i - 1 > palaceBlackI_UP && j + 1 < palaceBlackJ_RIGHT &&
 			(boardStatus[i - 1][j + 1] >= 8)) {
 			legalEat.push_back(make_pair(i - 1, j + 1));
@@ -175,8 +175,8 @@ vector<COORDINATE> ClassGuard::eatable(const vector<vector<int>> & boardStatus) 
 			legalEat.push_back(make_pair(i - 1, j - 1));
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
-		//UP-RIGHT≤æ∞ ¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨O™≈ÆÊ
+	else if (identity == RED) {//Á¥ÖÊñπ
+		//UP-RIGHTÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅépalace‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		if (i - 1 > palaceRedI_UP && j + 1 < palaceRedJ_RIGHT &&
 			(boardStatus[i - 1][j + 1] > 0 && boardStatus[i - 1][j + 1] <= 7)) {
 			legalEat.push_back(make_pair(i - 1, j + 1));
@@ -199,12 +199,12 @@ vector<COORDINATE> ClassGuard::eatable(const vector<vector<int>> & boardStatus) 
 	}
 	return legalEat;
 }
-//===∂H/¨€========================================================
+//===Ë±°/Áõ∏========================================================
 vector<COORDINATE> ClassMinister::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP-RIGHT≤æ∞ ¥—°A§£πL™e§£∂WΩu•B∏ÙÆ|§W¨O™≈ÆÊ
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UP-RIGHTÁßªÂãïÊ£ãÔºå‰∏çÈÅéÊ≤≥‰∏çË∂ÖÁ∑ö‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		if (i - 2 > boardTop && j + 2 < boardRight &&
 			(boardStatus[i - 2][j + 2] == 0) && (boardStatus[i - 1][j + 1] == 0)) {
 			legalMove.push_back(make_pair(i - 2, j + 2));
@@ -225,8 +225,8 @@ vector<COORDINATE> ClassMinister::movable(const vector<vector<int>>& boardStatus
 			legalMove.push_back(make_pair(i - 2, j - 2));
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
-		//UP-RIGHT≤æ∞ ¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨O™≈ÆÊ
+	else if (identity == RED) {//Á¥ÖÊñπ
+		//UP-RIGHTÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅépalace‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		if (i - 2 > riverRed && j + 2 < boardRight &&
 			(boardStatus[i - 2][j + 2] == 0) && (boardStatus[i - 1][j + 1] == 0)) {
 			legalMove.push_back(make_pair(i - 2, j + 2));
@@ -252,8 +252,8 @@ vector<COORDINATE> ClassMinister::movable(const vector<vector<int>>& boardStatus
 vector<COORDINATE> ClassMinister::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP-RIGHT≤æ∞ ¥—°A§£πL™e§£∂WΩu•B∏ÙÆ|§W¨O™≈ÆÊ
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UP-RIGHTÁßªÂãïÊ£ãÔºå‰∏çÈÅéÊ≤≥‰∏çË∂ÖÁ∑ö‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		if (i - 2 > boardTop && j + 2 < boardRight &&
 			(boardStatus[i - 2][j + 2] >= 8) && (boardStatus[i - 1][j + 1] == 0)) {
 			legalEat.push_back(make_pair(i - 2, j + 2));
@@ -274,8 +274,8 @@ vector<COORDINATE> ClassMinister::eatable(const vector<vector<int>> & boardStatu
 			legalEat.push_back(make_pair(i - 2, j - 2));
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
-		//UP-RIGHT≤æ∞ ¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨O™≈ÆÊ
+	else if (identity == RED) {//Á¥ÖÊñπ
+		//UP-RIGHTÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅépalace‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		if (i - 2 > riverRed && j + 2 < boardRight &&
 			(boardStatus[i - 2][j + 2] > 0) && (boardStatus[i - 2][j + 2] <= 8) && (boardStatus[i - 1][j + 1] == 0)) {
 			legalEat.push_back(make_pair(i - 2, j + 2));
@@ -298,12 +298,12 @@ vector<COORDINATE> ClassMinister::eatable(const vector<vector<int>> & boardStatu
 	}
 	return legalEat;
 }
-//===========================================================
+//===Ëªä/‰ø•========================================================
 vector<COORDINATE> ClassRook::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second, k = 1;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP≤æ∞ ¥—°A§£∂WπL√‰¨…•B∏ÙÆ|§W¨O™≈ÆÊ
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UPÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅéÈÇäÁïå‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		k = 1;
 		while (i - k > boardTop &&
 			(boardStatus[i - k][j] == 0)) {
@@ -332,7 +332,7 @@ vector<COORDINATE> ClassRook::movable(const vector<vector<int>>& boardStatus) {
 			k++;
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		//UP
 		k = 1;
 		while (i - k > boardTop &&
@@ -367,8 +367,8 @@ vector<COORDINATE> ClassRook::movable(const vector<vector<int>>& boardStatus) {
 vector<COORDINATE> ClassRook::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second, k = 1;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP≤æ∞ ¥—
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UPÁßªÂãïÊ£ã
 		k = 1;
 		while (i - k > boardTop &&
 			(boardStatus[i - k][j] == 0)) {
@@ -397,7 +397,7 @@ vector<COORDINATE> ClassRook::eatable(const vector<vector<int>> & boardStatus) {
 		}
 		if (boardStatus[i][j + k] >= 8) legalEat.push_back(make_pair(i, j + k));
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		//UP
 		k = 1;
 		while (i - k > boardTop &&
@@ -429,53 +429,53 @@ vector<COORDINATE> ClassRook::eatable(const vector<vector<int>> & boardStatus) {
 	}
 	return legalEat;
 }
-//===========================================================
+//===È¶¨/ÂÇå========================================================
 vector<COORDINATE> ClassHorse::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second;
-	if ((i - 1) >= 1 && (i - 1) <= 10 && j >= 1 && j <= 9) {									//§W§Ë
+	if ((i - 1) >= 1 && (i - 1) <= 10 && j >= 1 && j <= 9) {									//‰∏äÊñπ
 		if (boardStatus[i - 1][j] == 0) {
-			if ((i - 2) >= 1 && (i - 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//§W§G•™
+			if ((i - 2) >= 1 && (i - 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//‰∏ä‰∫åÂ∑¶
 				if (boardStatus[i - 2][j - 1] == 0)
 					legalMove.push_back(make_pair(i - 2, j - 1));
 			}
-			if ((i - 2) >= 1 && (i - 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//§W§G•k
+			if ((i - 2) >= 1 && (i - 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//‰∏ä‰∫åÂè≥
 				if (boardStatus[i - 2][j + 1] == 0)
 					legalMove.push_back(make_pair(i - 2, j + 1));
 			}
 		}
 	}
-	if ((i + 1) >= 1 && (i + 1) <= 10 && j >= 1 && j <= 9) {									//§U§Ë
+	if ((i + 1) >= 1 && (i + 1) <= 10 && j >= 1 && j <= 9) {									//‰∏ãÊñπ
 		if (boardStatus[i + 1][j] == 0) {
-			if ((i + 2) >= 1 && (i + 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//§U§G•™
+			if ((i + 2) >= 1 && (i + 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//‰∏ã‰∫åÂ∑¶
 				if (boardStatus[i + 2][j - 1] == 0)
 					legalMove.push_back(make_pair(i + 2, j - 1));
 			}
-			if ((i + 2) >= 1 && (i + 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//§U§G•k
+			if ((i + 2) >= 1 && (i + 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//‰∏ã‰∫åÂè≥
 				if (boardStatus[i + 2][j + 1] == 0)
 					legalMove.push_back(make_pair(i + 2, j + 1));
 			}
 		}
 	}
-	if (i >= 1 && i <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {									//•™§Ë
+	if (i >= 1 && i <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {									//Â∑¶Êñπ
 		if (boardStatus[i][j - 1] == 0) {
-			if ((i - 1) >= 1 && (i - 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//§W•™§G
+			if ((i - 1) >= 1 && (i - 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//‰∏äÂ∑¶‰∫å
 				if (boardStatus[i - 1][j - 2] == 0)
 					legalMove.push_back(make_pair(i - 1, j - 2));
 			}
-			if ((i + 1) >= 1 && (i + 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//§U•™§G
+			if ((i + 1) >= 1 && (i + 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//‰∏ãÂ∑¶‰∫å
 				if (boardStatus[i + 1][j - 2] == 0)
 					legalMove.push_back(make_pair(i + 1, j - 2));
 			}
 		}
 	}
-	if (i >= 1 && i <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {									//•k§Ë
+	if (i >= 1 && i <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {									//Âè≥Êñπ
 		if (boardStatus[i][j + 1] == 0) {
-			if ((i - 1) >= 1 && (i - 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//§W•k§G
+			if ((i - 1) >= 1 && (i - 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//‰∏äÂè≥‰∫å
 				if (boardStatus[i - 1][j + 2] == 0)
 					legalMove.push_back(make_pair(i - 1, j + 2));
 			}
-			if ((i + 1) >= 1 && (i + 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//§U•k§G
+			if ((i + 1) >= 1 && (i + 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//‰∏ãÂè≥‰∫å
 				if (boardStatus[i + 1][j + 2] == 0)
 					legalMove.push_back(make_pair(i + 1, j + 2));
 			}
@@ -487,55 +487,55 @@ vector<COORDINATE> ClassHorse::eatable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second;
 	int lowBound = 0, upBound = 0;
-	if (identity == BLACK) {//∂¬§Ë
+	if (identity == BLACK) {//ÈªëÊñπ
 		lowBound = 8;	upBound = 14;
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		lowBound = 1;	upBound = 7;
 	}
-	if ((i - 1) >= 1 && (i - 1) <= 10 && j >= 1 && j <= 9) {									//§W§Ë
+	if ((i - 1) >= 1 && (i - 1) <= 10 && j >= 1 && j <= 9) {									//‰∏äÊñπ
 		if (boardStatus[i - 1][j] == 0) {
-			if ((i - 2) >= 1 && (i - 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//§W§G•™
+			if ((i - 2) >= 1 && (i - 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//‰∏ä‰∫åÂ∑¶
 				if (boardStatus[i - 2][j - 1] >= lowBound && boardStatus[i - 2][j - 1] <= upBound)
 					legalEat.push_back(make_pair(i - 2, j - 1));
 			}
-			if ((i - 2) >= 1 && (i - 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//§W§G•k
+			if ((i - 2) >= 1 && (i - 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//‰∏ä‰∫åÂè≥
 				if (boardStatus[i - 2][j + 1] >= lowBound && boardStatus[i - 2][j + 1] <= upBound)
 					legalEat.push_back(make_pair(i - 2, j + 1));
 			}
 		}
 	}
-	if ((i + 1) >= 1 && (i + 1) <= 10 && j >= 1 && j <= 9) {									//§U§Ë
+	if ((i + 1) >= 1 && (i + 1) <= 10 && j >= 1 && j <= 9) {									//‰∏ãÊñπ
 		if (boardStatus[i + 1][j] == 0) {
-			if ((i + 2) >= 1 && (i + 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//§U§G•™
+			if ((i + 2) >= 1 && (i + 2) <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {				//‰∏ã‰∫åÂ∑¶
 				if (boardStatus[i + 2][j - 1] >= lowBound && boardStatus[i + 2][j - 1] <= upBound)
 					legalEat.push_back(make_pair(i + 2, j - 1));
 			}
-			if ((i + 2) >= 1 && (i + 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//§U§G•k
+			if ((i + 2) >= 1 && (i + 2) <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {				//‰∏ã‰∫åÂè≥
 				if (boardStatus[i + 2][j + 1] >= lowBound && boardStatus[i + 2][j + 1] <= upBound)
 					legalEat.push_back(make_pair(i + 2, j + 1));
 			}
 		}
 	}
-	if (i >= 1 && i <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {									//•™§Ë
+	if (i >= 1 && i <= 10 && (j - 1) >= 1 && (j - 1) <= 9) {									//Â∑¶Êñπ
 		if (boardStatus[i][j - 1] == 0) {
-			if ((i - 1) >= 1 && (i - 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//§W•™§G
+			if ((i - 1) >= 1 && (i - 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//‰∏äÂ∑¶‰∫å
 				if (boardStatus[i - 1][j - 2] >= lowBound && boardStatus[i - 1][j - 2] <= upBound)
 					legalEat.push_back(make_pair(i - 1, j - 2));
 			}
-			if ((i + 1) >= 1 && (i + 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//§U•™§G
+			if ((i + 1) >= 1 && (i + 1) <= 10 && (j - 2) >= 1 && (j - 2) <= 9) {				//‰∏ãÂ∑¶‰∫å
 				if (boardStatus[i + 1][j - 2] >= lowBound && boardStatus[i + 1][j - 2] <= upBound)
 					legalEat.push_back(make_pair(i + 1, j - 2));
 			}
 		}
 	}
-	if (i >= 1 && i <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {									//•k§Ë
+	if (i >= 1 && i <= 10 && (j + 1) >= 1 && (j + 1) <= 9) {									//Âè≥Êñπ
 		if (boardStatus[i][j + 1] == 0) {
-			if ((i - 1) >= 1 && (i - 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//§W•k§G
+			if ((i - 1) >= 1 && (i - 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//‰∏äÂè≥‰∫å
 				if (boardStatus[i - 1][j + 2] >= lowBound && boardStatus[i - 1][j + 2] <= upBound)
 					legalEat.push_back(make_pair(i - 1, j + 2));
 			}
-			if ((i + 1) >= 1 && (i + 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//§U•k§G
+			if ((i + 1) >= 1 && (i + 1) <= 10 && (j + 2) >= 1 && (j + 2) <= 9) {				//‰∏ãÂè≥‰∫å
 				if (boardStatus[i + 1][j + 2] >= lowBound && boardStatus[i + 1][j + 2] <= upBound)
 					legalEat.push_back(make_pair(i + 1, j + 2));
 			}
@@ -543,12 +543,12 @@ vector<COORDINATE> ClassHorse::eatable(const vector<vector<int>>& boardStatus) {
 	}
 	return legalEat;
 }
-//===========================================================
+//===ÂåÖ/ÁÇÆ========================================================
 vector<COORDINATE> ClassCannon::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second, k = 1;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP≤æ∞ ¥—°A§£∂WπL√‰¨…•B∏ÙÆ|§W¨O™≈ÆÊ
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UPÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅéÈÇäÁïå‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
 		k = 1;
 		while (i - k > boardTop &&
 			(boardStatus[i - k][j] == 0)) {
@@ -577,7 +577,7 @@ vector<COORDINATE> ClassCannon::movable(const vector<vector<int>>& boardStatus) 
 			k++;
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		//UP
 		k = 1;
 		while (i - k > boardTop &&
@@ -612,8 +612,8 @@ vector<COORDINATE> ClassCannon::movable(const vector<vector<int>>& boardStatus) 
 vector<COORDINATE> ClassCannon::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second, k = 1;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP≤æ∞ ¥—
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UPÁßªÂãïÊ£ã
 		k = 1;
 		while (i - k > boardTop &&
 			(boardStatus[i - k][j] == 0)) {
@@ -670,7 +670,7 @@ vector<COORDINATE> ClassCannon::eatable(const vector<vector<int>> & boardStatus)
 			if (boardStatus[i][j + k] >= 8) legalEat.push_back(make_pair(i, j + k));
 		}
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		//UP
 		k = 1;
 		while (i - k > boardTop &&
@@ -730,52 +730,49 @@ vector<COORDINATE> ClassCannon::eatable(const vector<vector<int>> & boardStatus)
 	}
 	return legalEat;
 }
-//===========================================================
+//===Âçí/ÂÖµ========================================================
 vector<COORDINATE> ClassSoldier::movable(const vector<vector<int>>& boardStatus) {
 	vector<COORDINATE> legalMove;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP≤æ∞ ¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨O™≈ÆÊ
-		if (i - 1 > palaceBlackI_UP &&
-			(boardStatus[i - 1][j] == 0)) {
-			legalMove.push_back(make_pair(i - 1, j));
-		}
-		//DOWN
-		if (i + 1 < palaceBlackI_DOWN &&
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UP is banned
+		//DOWNÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅéÈÇäÁïå‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
+		if (i + 1 < boardBottom &&
 			(boardStatus[i + 1][j] == 0)) {
 			legalMove.push_back(make_pair(i + 1, j));
 		}
-		//LEFT	
-		if (j - 1 > palaceBlackJ_LEFT &&
-			(boardStatus[i][j - 1] == 0)) {
-			legalMove.push_back(make_pair(i, j - 1));
+		if (i >= riverBlack) {//Â∑≤ÈÅéÊ≤≥
+			//LEFT	
+			if (j - 1 > boardLeft &&
+				(boardStatus[i][j - 1] == 0)) {
+				legalMove.push_back(make_pair(i, j - 1));
+			}
+			//RIGHT	
+			if (j + 1 < boardRight &&
+				(boardStatus[i][j + 1] == 0)) {
+				legalMove.push_back(make_pair(i, j + 1));
+			}
 		}
-		//RIGHT	
-		if (j + 1 < palaceBlackJ_RIGHT &&
-			(boardStatus[i][j + 1] == 0)) {
-			legalMove.push_back(make_pair(i, j + 1));
-		}
+
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		//UP
-		if (i - 1 > palaceRedI_UP &&
+		if (i - 1 > boardTop &&
 			(boardStatus[i - 1][j] == 0)) {
 			legalMove.push_back(make_pair(i - 1, j));
 		}
-		//DOWN
-		if (i + 1 < palaceRedI_DOWN &&
-			(boardStatus[i + 1][j] == 0)) {
-			legalMove.push_back(make_pair(i + 1, j));
-		}
-		//LEFT	
-		if (j - 1 > palaceRedJ_LEFT &&
-			(boardStatus[i][j - 1] == 0)) {
-			legalMove.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceRedJ_RIGHT &&
-			(boardStatus[i][j + 1] == 0)) {
-			legalMove.push_back(make_pair(i, j + 1));
+		//DOWN is banned
+		if (i <= riverRed) {
+			//LEFT	
+			if (j - 1 > boardLeft &&
+				(boardStatus[i][j - 1] == 0)) {
+				legalMove.push_back(make_pair(i, j - 1));
+			}
+			//RIGHT	
+			if (j + 1 < boardRight &&
+				(boardStatus[i][j + 1] == 0)) {
+				legalMove.push_back(make_pair(i, j + 1));
+			}
 		}
 	}
 	return legalMove;
@@ -783,48 +780,45 @@ vector<COORDINATE> ClassSoldier::movable(const vector<vector<int>>& boardStatus)
 vector<COORDINATE> ClassSoldier::eatable(const vector<vector<int>> & boardStatus) {
 	vector<COORDINATE> legalEat;
 	int i = position.first, j = position.second;
-	if (identity == BLACK) {//∂¬§Ë
-		//UP¶Y¥—°A§£∂WπLpalace•B∏ÙÆ|§W¨Oºƒ≠x
-		if (i - 1 > palaceBlackI_UP &&
-			(boardStatus[i - 1][j] >= 8)) {
-			legalEat.push_back(make_pair(i - 1, j));
-		}
-		//DOWN
-		if (i + 1 < palaceBlackI_DOWN &&
+	if (identity == BLACK) {//ÈªëÊñπ
+		//UP is banned
+		//DOWNÁßªÂãïÊ£ãÔºå‰∏çË∂ÖÈÅéÈÇäÁïå‰∏îË∑ØÂæë‰∏äÊòØÁ©∫Ê†º
+		if (i + 1 < boardBottom &&
 			(boardStatus[i + 1][j] >= 8)) {
 			legalEat.push_back(make_pair(i + 1, j));
 		}
-		//LEFT	
-		if (j - 1 > palaceBlackJ_LEFT &&
-			(boardStatus[i][j - 1] >= 8)) {
-			legalEat.push_back(make_pair(i, j - 1));
+		if (i >= riverBlack) {//Â∑≤ÈÅéÊ≤≥
+			//LEFT	
+			if (j - 1 > boardLeft &&
+				(boardStatus[i][j - 1] >= 8)) {
+				legalEat.push_back(make_pair(i, j - 1));
+			}
+			//RIGHT	
+			if (j + 1 < boardRight &&
+				(boardStatus[i][j + 1] >= 8)) {
+				legalEat.push_back(make_pair(i, j + 1));
+			}
 		}
-		//RIGHT	
-		if (j + 1 < palaceBlackJ_RIGHT &&
-			(boardStatus[i][j + 1] >= 8)) {
-			legalEat.push_back(make_pair(i, j + 1));
-		}
+
 	}
-	else if (identity == RED) {//¨ı§Ë
+	else if (identity == RED) {//Á¥ÖÊñπ
 		//UP
-		if (i - 1 > palaceRedI_UP &&
-			(boardStatus[i - 1][j] <= 7 && boardStatus[i - 1][j] > 0)) {
+		if (i - 1 > boardTop &&
+			(boardStatus[i - 1][j] >= 1) && (boardStatus[i - 1][j] <= 7)) {
 			legalEat.push_back(make_pair(i - 1, j));
 		}
-		//DOWN
-		if (i + 1 < palaceRedI_DOWN &&
-			(boardStatus[i + 1][j] <= 7 && boardStatus[i + 1][j] > 0)) {
-			legalEat.push_back(make_pair(i + 1, j));
-		}
-		//LEFT	
-		if (j - 1 > palaceRedJ_LEFT &&
-			(boardStatus[i][j - 1] <= 7 && boardStatus[i][j - 1] > 0)) {
-			legalEat.push_back(make_pair(i, j - 1));
-		}
-		//RIGHT	
-		if (j + 1 < palaceRedJ_RIGHT &&
-			(boardStatus[i][j + 1] <= 7 && boardStatus[i][j + 1] > 0)) {
-			legalEat.push_back(make_pair(i, j + 1));
+		//DOWN is banned
+		if (i <= riverRed) {//Â∑≤ÈÅéÊ≤≥
+			//LEFT	
+			if (j - 1 > boardLeft &&
+				(boardStatus[i][j - 1] >= 1) && (boardStatus[i][j - 1] <= 7)) {
+				legalEat.push_back(make_pair(i, j - 1));
+			}
+			//RIGHT	
+			if (j + 1 < boardRight &&
+				(boardStatus[i][j + 1] >= 1) && (boardStatus[i][j + 1] <= 7)) {
+				legalEat.push_back(make_pair(i, j + 1));
+			}
 		}
 	}
 	return legalEat;
