@@ -64,14 +64,21 @@ const string gameMenuOption[5] = {
 namespace {
 	void setColor(int f = 7, int b = 0) {
 		// 使用的常用代碼:240>>白底黑字，116>>灰底深紅字，7>>黑底白字，252>>白底紅字
+		// 28>>可移動位置，201>>可叫吃位置
 		unsigned short ForeColor = f + 16 * b;
 		SetConsoleTextAttribute(handle, ForeColor);
 	}
+	// Intent:顯示/隱藏 console 的游(光)標 cursor
+	// Pre:傳入bool，true->顯示 / false->隱藏
+	// Post:無
 	void cursorVisiable(bool flag) {
 		GetConsoleCursorInfo(handle, &cci);
 		cci.bVisible = flag;
 		SetConsoleCursorInfo(handle, &cci);
 	}
+	// Intent:設置console游(光)標cursor 位置
+	// Pre:int [x]、[y]，左上角為(0,0)			/// (42,2)為棋盤內可移動的最左上角
+	// Post:無
 	void setConsoleCursorCoordinate(int x = 42, int y = 2) {
 		cursorPosition.X = x;	cursorPosition.Y = y;
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
@@ -127,6 +134,7 @@ namespace {
 			cout << endl;
 		}
 	}
+	// 更新整個棋盤
 	void printBoardNoSpace(vector<vector<int>> chessInt,int m, int n) {
 		__int64 row, col;
 		for (int i = 0; i < 21; i++) {
@@ -149,6 +157,7 @@ namespace {
 			}
 		}
 	}
+
 }
 
 
@@ -176,6 +185,7 @@ Game::Game()
 
 Game::~Game()
 {
+	// 清空vector
 	for (int i = 0; i < this->boardStatus.size(); i++) 
 		this->boardStatus[i].erase(this->boardStatus[i].begin(), this->boardStatus[i].end());
 	this->boardStatus.erase(this->boardStatus.begin(), this->boardStatus.end());
@@ -187,11 +197,14 @@ Game::~Game()
 void Game::showMenu() {
 	setColor(7);
 
+	// 顯示gameMenu
 	for (int i = 0; i < (sizeof(gameMenuOption) / sizeof(gameMenuOption[0])); i++) {
 		setConsoleCursorCoordinate(42, 5 + i);
 		cout << gameMenuOption[i];
 	}
+	// 宣告gameMenu 專屬console座標 int [y]
 	int commandPress, y = 6;
+	// 設定console座標位置，從(54,6)開始繪製
 	setConsoleCursorCoordinate(54, 6);
 	cursorVisiable(false);
 	while (commandPress = _getch())
@@ -284,7 +297,7 @@ void Game::gameStart() {
 						&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 7) {
 						isTakingPiece = true;
 
-						// 繪製可走範圍
+						// 繪製可走/吃範圍
 						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
 						whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
 						for (int j = 0; j < whereCanMove.size(); j++) {
@@ -312,7 +325,7 @@ void Game::gameStart() {
 						&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 14) {
 						isTakingPiece = true;
 						
-						// 繪製可走範圍
+						// 繪製可走/吃範圍
 						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
 						whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
 						for (int j = 0; j < whereCanMove.size(); j++) {
@@ -367,7 +380,6 @@ void Game::gameStart() {
 			}
 		}
 		else if (commandPress == KEYBOARD_ESCAPE) {
-			//system("cls");
 			this->showMenu();
 		}
 
