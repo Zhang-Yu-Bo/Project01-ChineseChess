@@ -40,6 +40,12 @@ extern HANDLE handle;
 extern COORD cursorPosition;
 #endif // !_CONSOLE_INFO_HANDLE_
 
+#ifndef _GAME_MENU_
+#define _GAME_MENU_
+extern const string gameMenuOption[5];
+#endif // !_GAME_MENU_
+
+
 
 //static CONSOLE_SCREEN_BUFFER_INFO csbi;
 

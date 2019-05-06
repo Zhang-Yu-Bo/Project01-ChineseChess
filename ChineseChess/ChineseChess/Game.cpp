@@ -49,6 +49,17 @@ const string clearBoard[21][18] = {
 };
 #endif // _CLEAR_BOARD_
 
+#ifdef _GAME_MENU_
+const string gameMenuOption[5] = {
+		"▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼",
+		"∥　　　　　→繼續遊戲　　　　　∥",
+		"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥",
+		"∥　　　　　　返回主選單　　　　∥",
+		"▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲"
+};
+#endif // _GAME_MENU_
+
+
 
 namespace {
 	void setColor(int f = 7, int b = 0) {
@@ -165,16 +176,52 @@ Game::Game()
 
 Game::~Game()
 {
+	for (int i = 0; i < this->boardStatus.size(); i++) 
+		this->boardStatus[i].erase(this->boardStatus[i].begin(), this->boardStatus[i].end());
 	this->boardStatus.erase(this->boardStatus.begin(), this->boardStatus.end());
+	for (int i = 0; i < this->pointBoardStatus.size(); i++) 
+		this->pointBoardStatus[i].erase(this->pointBoardStatus[i].begin(), this->pointBoardStatus[i].end());
 	this->pointBoardStatus.erase(this->pointBoardStatus.begin(), this->pointBoardStatus.end());
 }
 
 void Game::showMenu() {
-	if (menu != NULL) {
-		menu->showMenu();
-		this->~Game();
+	setColor(7);
+
+	for (int i = 0; i < (sizeof(gameMenuOption) / sizeof(gameMenuOption[0])); i++) {
+		setConsoleCursorCoordinate(42, 5 + i);
+		cout << gameMenuOption[i];
 	}
-	
+	int commandPress, y = 6;
+	setConsoleCursorCoordinate(54, 6);
+	cursorVisiable(false);
+	while (commandPress = _getch())
+	{
+		if (commandPress == KEYBOARD_UP) {
+			y -= 2;
+		}
+		else if (commandPress == KEYBOARD_DOWN) {
+			y += 2;
+		}
+		else if (commandPress == KEYBOARD_ENTER) {
+			if (y == 6) {
+				cursorVisiable(true);
+				printBoardNoSpace(this->boardStatus, 42, 1);
+				break;
+			}
+			else if (y == 8) {
+				if (menu != NULL) {
+					system("cls");
+					menu->showMenu();
+					this->~Game();
+				}
+			}
+		}
+		y = (y > 8) ? 6 : y;
+		y = (y < 6) ? 8 : y;
+		cout << "　\b\b";
+		setConsoleCursorCoordinate(54, y);
+		cout << "→\b\b";
+	}
 }
 
 void Game::gameStart() {
@@ -320,7 +367,7 @@ void Game::gameStart() {
 			}
 		}
 		else if (commandPress == KEYBOARD_ESCAPE) {
-			system("cls");
+			//system("cls");
 			this->showMenu();
 		}
 
