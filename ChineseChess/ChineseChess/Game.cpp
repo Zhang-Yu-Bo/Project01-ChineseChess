@@ -116,6 +116,28 @@ namespace {
 			cout << endl;
 		}
 	}
+	void printBoardNoSpace(vector<vector<int>> chessInt,int m, int n) {
+		__int64 row, col;
+		for (int i = 0; i < 21; i++) {
+			setConsoleCursorCoordinate(m, n + i);
+			for (int j = 0; j < 18; j++) {
+				row = (__int64)(i / 2) + 1;	col = (__int64)(j / 2) + 1;
+				if (i % 2 == 1 && j % 2 == 0 && chessInt[row][col] != 0)
+				{
+					if (chessInt[row][col] >= 1 && chessInt[row][col] <= 7)
+						setColor(240, 0);
+					else if (chessInt[row][col] >= 8 && chessInt[row][col] <= 14)
+						setColor(252, 0);
+					printChess(chessInt[row][col]);
+				}
+				else {
+					// 奇數列偶數行判斷int陣列裡面的東東
+					setColor(116, 0);
+					cout << clearBoard[i][j];
+				}
+			}
+		}
+	}
 }
 
 
@@ -180,6 +202,7 @@ void Game::gameStart() {
 	COORDINATE virtualCoordinate = make_pair(1, 1);
 	COORDINATE destinationCoordinate = make_pair(1, 1);
 	vector<COORDINATE> whereCanMove;
+	vector<COORDINATE> whereCanEat;
 
 	while (commandPress = _getch())
 	{
@@ -215,13 +238,20 @@ void Game::gameStart() {
 						isTakingPiece = true;
 
 						// 繪製可走範圍
-						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);;
+						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
+						whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
 						for (int j = 0; j < whereCanMove.size(); j++) {
 							// 棋盤座標轉換為console座標
 							setConsoleCursorCoordinate((whereCanMove[j].second - 1) * 4 + 42, (whereCanMove[j].first - 1) * 2 + 2);
 							setColor(28);
 							// row=2*y-1		col=2*x-2
 							cout << clearBoard[2 * whereCanMove[j].first - 1][2 * whereCanMove[j].second - 2];
+						}
+						for (int j = 0; j < whereCanEat.size(); j++) {
+							// 棋盤座標轉換為console座標
+							setConsoleCursorCoordinate((whereCanEat[j].second - 1) * 4 + 42, (whereCanEat[j].first - 1) * 2 + 2);
+							setColor(201);
+							printChess(this->boardStatus[whereCanEat[j].first][whereCanEat[j].second]);
 						}
 
 					}
@@ -236,7 +266,8 @@ void Game::gameStart() {
 						isTakingPiece = true;
 						
 						// 繪製可走範圍
-						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);;
+						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
+						whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
 						for (int j = 0; j < whereCanMove.size(); j++) {
 							// 棋盤座標轉換為console座標
 							setConsoleCursorCoordinate((whereCanMove[j].second - 1) * 4 + 42, (whereCanMove[j].first - 1) * 2 + 2);
@@ -244,7 +275,12 @@ void Game::gameStart() {
 							// row=2*y-1		col=2*x-2
 							cout << clearBoard[2 * whereCanMove[j].first - 1][2 * whereCanMove[j].second - 2];
 						}
-
+						for (int j = 0; j < whereCanEat.size(); j++) {
+							// 棋盤座標轉換為console座標
+							setConsoleCursorCoordinate((whereCanEat[j].second - 1) * 4 + 42, (whereCanEat[j].first - 1) * 2 + 2);
+							setColor(201);
+							printChess(this->boardStatus[whereCanEat[j].first][whereCanEat[j].second]);
+						}
 					}
 					else {
 						cout << "\a";
@@ -275,8 +311,7 @@ void Game::gameStart() {
 						// 移動或吃棋成功
 						isTakingPiece = false;
 						this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
-						setConsoleCursorCoordinate(0, 1);
-						printBoard(this->boardStatus);
+						printBoardNoSpace(this->boardStatus, 42, 1);
 					}
 					else {
 						cout << "\a";
