@@ -45,7 +45,11 @@ extern COORD cursorPosition;
 extern const string gameMenuOption[5];
 #endif // !_GAME_MENU_
 
-
+#ifndef _LEFT_RIGHT_SPACE_
+#define _LEFT_RIGHT_SPACE_
+extern const string leftSpace[21];
+extern const string rightSpace[21];
+#endif // !_LEFT_RIGHT_SPACE_
 
 //static CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -68,5 +72,7 @@ private:
 	string tableFileName;
 	vector<vector<int>> boardStatus;
 	vector<vector<Pieces*>> pointBoardStatus;
+	vector<string> battleStatus;
+	vector<vector<vector<int>>> theLifeOfBS;
 };
 #endif // !_GAME_H_

@@ -59,6 +59,56 @@ const string gameMenuOption[5] = {
 };
 #endif // _GAME_MENU_
 
+#ifdef _LEFT_RIGHT_SPACE_
+const string leftSpace[21] = {
+	"∥　　　　　　　　　　　　　　　　　　　　",
+	"∥　。－－－－－－戰況顯示－－－－－－。　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　｜　　　　　　　　　　　　　　　　｜　",
+	"∥　。－－－－－－－－－－－－－－－－。　",
+	"∥　　　　　　　　　　　　　　　　　　　　"
+};
+const string rightSpace[21] = {
+	"　　　　　　　　　　　　　　　　　　　　∥",
+	"　。－－－－－－－－－－－－－－－－。　∥",
+	"　｜　　　　　　　　　　　　　　　　｜　∥",
+	"　｜　　　　　　　　　　　　　　　　｜　∥",
+	"　｜　　　　　　　　　　　　　　　　｜　∥",
+	"　｜　　　　　　　　　　　　　　　　｜　∥",
+	"　｜　　　　　　　　　　　　　　　　｜　∥",
+	"　。－－－－－－－－－－－－－－－－。　∥",
+	"　　　　　　　　　　　　　　　　　　　　∥",
+	"　　　　　　　　　　　　　　　　　　　　∥",
+	"　。－－－－－－－－－－－－－－－－。　∥",
+	"　｜　　　↑　　　　　　　　　　　　｜　∥",
+	"　｜　　←＋→　　方向鍵選棋　　　　｜　∥",
+	"　｜　　　↓　　　　　　　　　　　　｜　∥",
+	"　｜　　　　　　　　　　　　　　　　｜　∥",
+	"　｜　　Ｅｎｔｅｒ　選取棋子　　　　｜　∥",
+	"　｜　　　Ｅｓｃ　　開啟選單　　　　｜　∥",
+	"　｜　　　　＜　　　悔棋　　　　　　｜　∥",
+	"　｜　　　　　　　　　　　　　　　　｜　∥",
+	"　。－－－－－－－－－－－－－－－－。　∥",
+	"　　　　　　　　　　　　　　　　　　　　∥"
+};
+#endif // _LEFT_RIGHT_SPACE_
+
+
 
 
 namespace {
@@ -84,16 +134,16 @@ namespace {
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 	}
 	// 左方空位
-	void printLeftSpace() {
+	void printLeftSpace(int i) {
 		// 1+20
 		setColor(7);
-		cout << "∥　　　　　　　　　　　　　　　　　　　　";
+		cout << leftSpace[i];
 	}
 	//右方空位
-	void printRightSpace() {
+	void printRightSpace(int i) {
 		// 20+1
 		setColor(7);
-		cout << "　　　　　　　　　　　　　　　　　　　　∥";
+		cout << rightSpace[i];
 	}
 	void printTopBorder() {
 		cout << "▼";
@@ -113,7 +163,7 @@ namespace {
 	void printBoard(vector<vector<int>> chessInt) {
 		__int64 row, col;
 		for (int i = 0; i < 21; i++) {
-			printLeftSpace();
+			printLeftSpace(i);
 			for (int j = 0; j < 18; j++) {
 				row = (__int64)(i / 2) + 1;	col = (__int64)(j / 2) + 1;
 				if (i % 2 == 1 && j % 2 == 0 && chessInt[row][col] != 0)
@@ -130,7 +180,7 @@ namespace {
 					cout << clearBoard[i][j];
 				}
 			}
-			printRightSpace();
+			printRightSpace(i);
 			cout << endl;
 		}
 	}
@@ -166,9 +216,9 @@ Game::Game()
 	// 初始化 (黑/紅) (0/1) 的回合
 	this->nowTurn = 0;
 	// 初始化 棋盤檔名
-	//this->tableFileName = "Initial.txt";
+	this->tableFileName = "Initial.txt";
 	//this->tableFileName = "Check.txt";
-	this->tableFileName = "Test.txt";
+	//this->tableFileName = "Test.txt";
 	// =====================初始化console控制元件=====================
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	cursorPosition.X = 0;	cursorPosition.Y = 0;
@@ -457,7 +507,7 @@ void Game::setFileNameAndProcess() {
 }
 
 void Game::showTurn() {
-	setConsoleCursorCoordinate(90, 5);
+	setConsoleCursorCoordinate(86, 4);
 	setColor(27);
 	cout << "現在輪到　";
 	if (this->nowTurn == 1) {
@@ -469,11 +519,11 @@ void Game::showTurn() {
 		cout << "黑色方";
 	}
 	setColor(27);
-	cout << "　下棋";
+	cout << "下棋";
 }
 
 void Game::showChoice(int choice) {
-	setConsoleCursorCoordinate(96, 7);
+	setConsoleCursorCoordinate(90, 6);
 	if (choice == 0) {
 		setColor(7);
 		cout << "　　　　　　";
