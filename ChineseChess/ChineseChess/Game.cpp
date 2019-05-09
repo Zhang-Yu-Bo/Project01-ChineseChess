@@ -434,6 +434,8 @@ void Game::gameStart() {
 						this->pointBoardStatus
 					);
 					if (isSuccess) {
+						string temp = "移動成功";
+						this->battleStatus.push_back(temp);
 						// 移動或吃棋成功
 						isTakingPiece = false;
 						this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
@@ -441,6 +443,7 @@ void Game::gameStart() {
 						// 顯示提示，現在回合，選取棋子
 						this->showTurn();
 						this->showChoice(0);
+						this->showBattleStatus();
 					}
 					else {
 						cout << "\a";
@@ -502,6 +505,7 @@ void Game::setFileNameAndProcess() {
 			}
 		}
 		inputStream >> this->nowTurn;
+		whoStart = nowTurn;
 		inputStream.close();
 	}
 }
@@ -520,6 +524,44 @@ void Game::showTurn() {
 	}
 	setColor(27);
 	cout << "下棋";
+}
+
+void Game::showBattleStatus() {
+	if (battleStatus.size() <= 8) {
+		int i = 1;
+		for (vector<string>::iterator iter = battleStatus.begin(); iter != battleStatus.end(); iter++,i++) {
+			setConsoleCursorCoordinate(12, 2 + 2 * i);
+			cout << std::setw(4) << i << "　";// << *iter;
+			if ((whoStart + i) % 2 == 1) {
+				setColor(240);
+				cout << "黑";
+			}
+			else {
+				setColor(252);
+				cout << "紅";
+			}
+			setColor(7);
+			cout << "：" << *iter;
+		}
+	}
+	else if (battleStatus.size() > 7) {
+		vector<string>::reverse_iterator r_iter = battleStatus.rbegin();
+		for (int i = 0; i <= 7; i++) {
+			setConsoleCursorCoordinate(12, 4 + (2 * i));
+			cout << std::setw(4) << battleStatus.size() - (7 - i) << "　";
+			if ((whoStart + battleStatus.size() - (7 - i)) % 2 == 1) {
+				setColor(240);
+				cout << "黑";
+			}
+			else {
+				setColor(252);
+				cout << "紅";
+			}
+			setColor(7);
+			cout << "：" << *(r_iter + (7 - i));
+		}
+	}
+	//setConsoleCursorCoordinate(12, 4);
 }
 
 void Game::showChoice(int choice) {

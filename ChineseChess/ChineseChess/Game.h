@@ -8,6 +8,7 @@
 #include "PieceClassIndex/Pieces.h"
 #include "PieceClassIndex/PieceClass.h"
 #include "MainMenu.h"
+#include <iomanip>
 
 #define KEYBOARD_UP 72
 #define KEYBOARD_DOWN 80
@@ -67,8 +68,10 @@ private:
 	void setFileNameAndProcess();
 	void showTurn();
 	void showChoice(int choice);
+	void showBattleStatus();
 	// 
 	int nowTurn;
+	int whoStart;
 	string tableFileName;
 	vector<vector<int>> boardStatus;
 	vector<vector<Pieces*>> pointBoardStatus;
