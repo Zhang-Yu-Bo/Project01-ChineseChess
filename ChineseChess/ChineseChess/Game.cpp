@@ -438,6 +438,16 @@ void Game::gameStart() {
 						this->battleStatus.push_back(temp);
 						// 移動或吃棋成功
 						isTakingPiece = false;
+						int victory = JudgeVictory(boardStatus);
+						if(victory == BLACK){
+							//BLACK wins;
+						}
+						else if (victory == RED) {
+							//RED wins;
+						}
+						else {
+							//Game continues;
+						}
 						this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
 						printBoardNoSpace(this->boardStatus, 42, 1);
 						// 顯示提示，現在回合，選取棋子
@@ -582,4 +592,48 @@ void Game::showChoice(int choice) {
 			printChess(choice);
 		}
 	}
+}
+
+int Game::JudgeVictory(const vector<vector<int>>& boardStatus) {
+	//查找將與帥的位置
+	vector<int>::const_iterator iterB, iterR;
+	int ib, ir;
+	//ib from 1~3(將)
+	for (ib = 1; ib <= 3; ib++) {
+		iterB = find(boardStatus[ib].begin(),boardStatus[ib].end(), 1);
+		if (iterB != boardStatus[ib].end()) break;
+	}
+	//ir from 8~10(帥)
+	for (ir = 8; ir <= 10; ir++) {
+		iterR = find(boardStatus[ir].begin(), boardStatus[ir].end(), 8);
+		if (iterR != boardStatus[ir].end()) break;
+	}
+	if (iterB == boardStatus[ib].end() || iterR == boardStatus[ir].end()) {
+		//error
+		return -2;
+	}
+	Pieces BG(*pointBoardStatus[ib][iterB - boardStatus[ib].begin()]);
+	Pieces RG(*pointBoardStatus[ir][iterR - boardStatus[ir].begin()]);
+	if (!BG.JudgeAlive()) return RED;//紅方獲勝
+	else if (!RG.JudgeAlive()) return BLACK;//黑方獲勝
+	if (BG.FetchPosition().second == RG.FetchPosition().second) {//在同一個column上
+		int j = BG.FetchPosition().second;
+		int ib = BG.FetchPosition().first;
+		int ir = RG.FetchPosition().first;
+		int k = 1;
+		while (ib + k < boardBottom &&
+			(boardStatus[ib + k][j] == 0)) {
+			k++;
+		}
+		ib += k;
+		if (ib == ir) {//射箭
+			if (nowTurn == BLACK) {//黑方
+				return RED;//紅方獲勝
+			}
+			else {//紅方
+				return BLACK;//黑方獲勝
+			}
+		}
+	}
+	return -1;
 }

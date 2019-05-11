@@ -24,6 +24,7 @@ bool Pieces::MoveAndEat(COORDINATE destination, vector<vector<int>>& boardStatus
 	}
 	//==============執行吃棋====================
 	else if (eat != eatPosition.end()) {
+		pieceStatus[destination.first][destination.second]->alive = false;
 		boardStatus[position.first][position.second] = 0;
 		pieceStatus[destination.first][destination.second] = pieceStatus[position.first][position.second];
 		pieceStatus[position.first][position.second] = NULL;
@@ -34,4 +35,16 @@ bool Pieces::MoveAndEat(COORDINATE destination, vector<vector<int>>& boardStatus
 	else {
 		return false;
 	}
+}
+//==============取回資料====================
+bool Pieces::JudgeAlive()const {
+	return alive;
+}
+
+bool Pieces::FetchIdentity()const {
+	return identity;
+}
+
+COORDINATE Pieces::FetchPosition() const {
+	return position;
 }

@@ -69,6 +69,8 @@ private:
 	void showTurn();
 	void showChoice(int choice);
 	void showBattleStatus();
+	//黑方勝利擲回BLACK，紅方勝利擲回RED(macro: BLACK 0 / RED 1)，沒分勝負擲回-1，出現錯誤(找不到任一方的王)擲回-2
+	int JudgeVictory(const vector<vector<int>>& boardStatus);
 	// 
 	int nowTurn;
 	int whoStart;
