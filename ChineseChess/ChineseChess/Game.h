@@ -9,6 +9,8 @@
 #include "PieceClassIndex/PieceClass.h"
 #include "MainMenu.h"
 #include <iomanip>
+#include <mmsystem.h>
+#pragma comment(lib,"Winmm.lib")
 
 #define KEYBOARD_UP 72
 #define KEYBOARD_DOWN 80
@@ -69,6 +71,7 @@ private:
 	void showTurn();
 	void showChoice(int choice);
 	void showBattleStatus();
+	void boardStatusToPointBoardStatus();
 	//黑方勝利擲回BLACK，紅方勝利擲回RED(macro: BLACK 0 / RED 1)，沒分勝負擲回-1，出現錯誤(找不到任一方的王)擲回-2
 	int JudgeVictory(const vector<vector<int>>& boardStatus);
 	// 
@@ -78,6 +81,6 @@ private:
 	vector<vector<int>> boardStatus;
 	vector<vector<Pieces*>> pointBoardStatus;
 	vector<string> battleStatus;
-	vector<vector<vector<int>>> theLifeOfBS;
+	vector<vector<vector<int>>> theLogsOfBS;
 };
 #endif // !_GAME_H_

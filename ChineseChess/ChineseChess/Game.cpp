@@ -146,12 +146,14 @@ namespace {
 		cout << rightSpace[i];
 	}
 	void printTopBorder() {
+		setColor(7);
 		cout << "▼";
 		for (int i = 0; i < 57; i++)
 			cout << "＝";
 		cout << "▼\n";
 	}
 	void printDownBorder() {
+		setColor(7);
 		cout << "▲";
 		for (int i = 0; i < 57; i++)
 			cout << "＝";
@@ -184,7 +186,8 @@ namespace {
 			cout << endl;
 		}
 	}
-	// 更新整個棋盤
+
+	// 更新整個棋盤without空白
 	void printBoardNoSpace(vector<vector<int>> chessInt, int m = 42, int n = 1) {
 		__int64 row, col;
 		for (int i = 0; i < 21; i++) {
@@ -207,6 +210,56 @@ namespace {
 			}
 		}
 	}
+
+	// 顯示yes no對話框
+	bool showDialog(string msg) {
+		setColor(132);
+		setConsoleCursorCoordinate(42, 6);
+		cout << "▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼";
+		for (int i = 1; i <= 11; i++) {
+			setConsoleCursorCoordinate(42, 6 + i);
+			cout << "∥　　　　　　　　　　　　　　　∥";
+			if (i == 3) {
+				setConsoleCursorCoordinate(46, 6 + i);
+				cout << msg;
+			}
+			else if (i == 8) {
+				setConsoleCursorCoordinate(60, 6 + i);
+				cout << "是";
+				setConsoleCursorCoordinate(68, 6 + i);
+				cout << "否";
+			}
+		}
+		setConsoleCursorCoordinate(42, 17);
+		cout << "▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲";
+
+		setConsoleCursorCoordinate(60, 14);
+		int commandPress = 0, x = 60;
+		while (commandPress = _getch())
+		{
+			if (commandPress == KEYBOARD_LEFT) {
+				x -= 8;
+			}
+			else if (commandPress == KEYBOARD_RIGHT) {
+				x += 8;
+			}
+			else if (commandPress == KEYBOARD_ENTER) {
+				if (x == 60) {
+					return true;
+				}
+				else if (x == 68) {
+					return false;
+				}
+			}
+			else if (commandPress == KEYBOARD_ESCAPE) {
+				return false;
+			}
+			x = (x > 68) ? 60 : x;
+			x = (x < 60) ? 68 : x;
+			setConsoleCursorCoordinate(x, 14);
+		}
+	}
+
 }
 
 
@@ -240,9 +293,19 @@ Game::~Game()
 	for (int i = 0; i < this->boardStatus.size(); i++) 
 		this->boardStatus[i].erase(this->boardStatus[i].begin(), this->boardStatus[i].end());
 	this->boardStatus.erase(this->boardStatus.begin(), this->boardStatus.end());
+
 	for (int i = 0; i < this->pointBoardStatus.size(); i++) 
 		this->pointBoardStatus[i].erase(this->pointBoardStatus[i].begin(), this->pointBoardStatus[i].end());
 	this->pointBoardStatus.erase(this->pointBoardStatus.begin(), this->pointBoardStatus.end());
+
+	for (int i = 0; i < this->theLogsOfBS.size(); i++) {
+		for (int j = 0; j < this->theLogsOfBS[i].size(); j++) {
+			this->theLogsOfBS[i][j].erase(this->theLogsOfBS[i][j].begin(), this->theLogsOfBS[i][j].end());
+		}
+		this->theLogsOfBS[i].erase(this->theLogsOfBS[i].begin(), this->theLogsOfBS[i].end());
+	}
+	this->theLogsOfBS.erase(this->theLogsOfBS.begin(), this->theLogsOfBS.end());
+
 }
 
 void Game::showMenu() {
@@ -280,6 +343,11 @@ void Game::showMenu() {
 				}
 			}
 		}
+		else if (commandPress == KEYBOARD_ESCAPE) {
+			cursorVisiable(true);
+			printBoardNoSpace(this->boardStatus, 42, 1);
+			break;
+		}
 		y = (y > 8) ? 6 : y;
 		y = (y < 6) ? 8 : y;
 		cout << "　\b\b";
@@ -300,6 +368,9 @@ void Game::gameStart() {
 	printTopBorder();
 	printBoard(this->boardStatus);
 	printDownBorder();
+
+	// 下背景音樂
+	//PlaySound("Sounds/Lucid_Dreamer.wav", NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	// 將畫面往上拉，若不將光標位置y提至0的話，console畫面將會往下一點
 	setConsoleCursorCoordinate(0, 0);
@@ -333,6 +404,38 @@ void Game::gameStart() {
 			x += 4;
 		}
 		else if (commandPress == KEYBOARD_LEFT_SHIFT) {
+			
+			if (this->battleStatus.size() >= 2) {
+				// 放下棋子
+				isTakingPiece = false;
+
+				if (showDialog("是否要悔棋呢？")) {
+					// 刪除棋盤和戰況紀錄
+					this->theLogsOfBS.erase(this->theLogsOfBS.end() - 2, this->theLogsOfBS.end());
+					this->battleStatus.erase(this->battleStatus.end() - 2, this->battleStatus.end());
+				}
+
+
+				if (this->theLogsOfBS.size() == 0)
+					setFileNameAndProcess();
+				else
+					this->boardStatus = *(this->theLogsOfBS.end() - 1);
+
+				boardStatusToPointBoardStatus();
+				setColor(7);
+				setConsoleCursorCoordinate(0, 1);
+				// 將舊戰況紀錄擦掉
+				printBoard(this->boardStatus);
+				this->showTurn();
+				this->showChoice(0);
+				this->showBattleStatus();
+				// 更新第二次畫面，較不會顯示錯誤
+				printBoardNoSpace(this->boardStatus);
+				
+			}
+			else {
+				cout << "\a";
+			}
 
 		}
 		else if (commandPress == KEYBOARD_RIGHT_SHIFT) {
@@ -435,18 +538,46 @@ void Game::gameStart() {
 					);
 					if (isSuccess) {
 						this->battleStatus.push_back(chineseNotation);
+						this->theLogsOfBS.push_back(this->boardStatus);
+
+						// 下棋聲
+						mciSendString("play \"Sounds/下棋聲.mp3\" ", NULL, 0, 0);
+
 						// 移動或吃棋成功
 						isTakingPiece = false;
 						int victory = JudgeVictory(boardStatus);
+
 						if(victory == BLACK){
 							//BLACK wins;
+							if (showDialog("黑方勝利，重新開始一局嗎？")) {
+								system("cls");
+								menu->showMenu();
+								this->~Game();
+							}
+							else {
+								if (menu != NULL) {
+									system("cls");
+									menu->showMenu();
+									this->~Game();
+								}
+							}
 						}
 						else if (victory == RED) {
 							//RED wins;
+							if (showDialog("紅方勝利，重新開始一局嗎？")) {
+								system("cls");
+								menu->showMenu();
+								this->~Game();
+							}
+							else {
+								if (menu != NULL) {
+									system("cls");
+									menu->showMenu();
+									this->~Game();
+								}
+							}
 						}
-						else {
-							//Game continues;
-						}
+						
 						this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
 						printBoardNoSpace(this->boardStatus, 42, 1);
 						// 顯示提示，現在回合，選取棋子
@@ -461,6 +592,9 @@ void Game::gameStart() {
 			}
 		}
 		else if (commandPress == KEYBOARD_ESCAPE) {
+			isTakingPiece = false;
+			this->showTurn();
+			this->showChoice(0);
 			this->showMenu();
 		}
 
@@ -597,20 +731,32 @@ int Game::JudgeVictory(const vector<vector<int>>& boardStatus) {
 	//查找將與帥的位置
 	vector<int>::const_iterator iterB, iterR;
 	int ib, ir;
+	bool isBAlive = false, isRAlive = false;
 	//ib from 1~3(將)
 	for (ib = 1; ib <= 3; ib++) {
-		iterB = find(boardStatus[ib].begin(),boardStatus[ib].end(), 1);
-		if (iterB != boardStatus[ib].end()) break;
+		iterB = find(boardStatus[ib].begin(), boardStatus[ib].end(), 1);
+		if (iterB != boardStatus[ib].end()) {
+			isBAlive = true;
+			break;
+		}
 	}
 	//ir from 8~10(帥)
 	for (ir = 8; ir <= 10; ir++) {
 		iterR = find(boardStatus[ir].begin(), boardStatus[ir].end(), 8);
-		if (iterR != boardStatus[ir].end()) break;
+		if (iterR != boardStatus[ir].end()) {
+			isRAlive = true;
+			break;
+		}
 	}
+
+	if (!isRAlive)return BLACK;
+	if (!isBAlive)return RED;
+	
 	if (iterB == boardStatus[ib].end() || iterR == boardStatus[ir].end()) {
 		//error
 		return -2;
 	}
+	
 	Pieces BG(*pointBoardStatus[ib][iterB - boardStatus[ib].begin()]);
 	Pieces RG(*pointBoardStatus[ir][iterR - boardStatus[ir].begin()]);
 	if (!BG.JudgeAlive()) return RED;//紅方獲勝
@@ -635,4 +781,38 @@ int Game::JudgeVictory(const vector<vector<int>>& boardStatus) {
 		}
 	}
 	return -1;
+}
+
+void Game::boardStatusToPointBoardStatus() {
+
+	bool isBlackOrRed = false;
+
+	for (int i = 1; i < 11; i++) {
+		for (int j = 1; j < 10; j++) {
+			isBlackOrRed = (this->boardStatus[i][j] >= 1 && this->boardStatus[i][j] <= 7) ? false : true;
+			// 建立pointboardStatus
+			if (boardStatus[i][j] == 1 || boardStatus[i][j] == 8) {
+				this->pointBoardStatus[i][j] = new ClassGeneral(i, j, isBlackOrRed);
+			}
+			else if (boardStatus[i][j] == 2 || boardStatus[i][j] == 9) {
+				this->pointBoardStatus[i][j] = new ClassGuard(i, j, isBlackOrRed);
+			}
+			else if (boardStatus[i][j] == 3 || boardStatus[i][j] == 10) {
+				this->pointBoardStatus[i][j] = new ClassMinister(i, j, isBlackOrRed);
+			}
+			else if (boardStatus[i][j] == 4 || boardStatus[i][j] == 11) {
+				this->pointBoardStatus[i][j] = new ClassRook(i, j, isBlackOrRed);
+			}
+			else if (boardStatus[i][j] == 5 || boardStatus[i][j] == 12) {
+				this->pointBoardStatus[i][j] = new ClassHorse(i, j, isBlackOrRed);
+			}
+			else if (boardStatus[i][j] == 6 || boardStatus[i][j] == 13) {
+				this->pointBoardStatus[i][j] = new ClassCannon(i, j, isBlackOrRed);
+			}
+			else if (boardStatus[i][j] == 7 || boardStatus[i][j] == 14) {
+				this->pointBoardStatus[i][j] = new ClassSoldier(i, j, isBlackOrRed);
+			}
+			// 結束建立pointboardStatus
+		}
+	}
 }
