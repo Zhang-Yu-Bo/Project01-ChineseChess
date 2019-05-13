@@ -32,7 +32,9 @@ public:
 	//擲回所有可以吃的棋子位置(不包含移棋)
 	virtual vector<COORDINATE> eatable(const vector<vector<int>>&);
 	//修改物件位置，包含吃棋與移棋，須傳入目的地index，含防呆
-	bool MoveAndEat(COORDINATE, vector<vector<int>>&, vector<vector<Pieces*>>&);
+	bool MoveAndEat(COORDINATE, vector<vector<int>>&, vector<vector<Pieces*>>&, string&);
+	string ChineseNotation(const COORDINATE&, const COORDINATE&, const vector<vector<int>>&, const int&);
+	string NumberTransform(const int, const int);
 	bool JudgeAlive()const;
 	bool FetchIdentity()const;
 	COORDINATE FetchPosition()const;
