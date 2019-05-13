@@ -417,8 +417,6 @@ void Game::gameStart() {
 				if (virtualCoordinate == destinationCoordinate) {
 					// 如果選取原本的位置，則視為放下棋子重新選擇
 					isTakingPiece = false;
-					setConsoleCursorCoordinate(0, 1);
-					//printBoard(this->boardStatus);
 					printBoardNoSpace(this->boardStatus);
 					// 顯示提示，現在回合，選取棋子
 					this->showTurn();
