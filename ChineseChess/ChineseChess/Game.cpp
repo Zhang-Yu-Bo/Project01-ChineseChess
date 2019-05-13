@@ -731,56 +731,46 @@ int Game::JudgeVictory(const vector<vector<int>>& boardStatus) {
 	//查找將與帥的位置
 	vector<int>::const_iterator iterB, iterR;
 	int ib, ir;
-	bool isBAlive = false, isRAlive = false;
 	//ib from 1~3(將)
 	for (ib = 1; ib <= 3; ib++) {
 		iterB = find(boardStatus[ib].begin(), boardStatus[ib].end(), 1);
-		if (iterB != boardStatus[ib].end()) {
-			isBAlive = true;
-			break;
-		}
+		if (iterB != boardStatus[ib].end() || ib == 3) break;
 	}
 	//ir from 8~10(帥)
 	for (ir = 8; ir <= 10; ir++) {
 		iterR = find(boardStatus[ir].begin(), boardStatus[ir].end(), 8);
-		if (iterR != boardStatus[ir].end()) {
-			isRAlive = true;
-			break;
-		}
+		if (iterR != boardStatus[ir].end() || ir == 10) break;
 	}
-
-	if (!isRAlive)return BLACK;
-	if (!isBAlive)return RED;
-	
-	if (iterB == boardStatus[ib].end() || iterR == boardStatus[ir].end()) {
-		//error
-		return -2;
-	}
-	
-	Pieces BG(*pointBoardStatus[ib][iterB - boardStatus[ib].begin()]);
-	Pieces RG(*pointBoardStatus[ir][iterR - boardStatus[ir].begin()]);
-	if (!BG.JudgeAlive()) return RED;//紅方獲勝
-	else if (!RG.JudgeAlive()) return BLACK;//黑方獲勝
-	if (BG.FetchPosition().second == RG.FetchPosition().second) {//在同一個column上
-		int j = BG.FetchPosition().second;
-		int ib = BG.FetchPosition().first;
-		int ir = RG.FetchPosition().first;
-		int k = 1;
-		while (ib + k < boardBottom &&
-			(boardStatus[ib + k][j] == 0)) {
-			k++;
-		}
-		ib += k;
-		if (ib == ir) {//射箭
-			if (nowTurn == BLACK) {//黑方
-				return RED;//紅方獲勝
+	if (iterB != boardStatus[ib].end() && iterR != boardStatus[ir].end()) {
+		Pieces BG(*pointBoardStatus[ib][iterB - boardStatus[ib].begin()]);
+		Pieces RG(*pointBoardStatus[ir][iterR - boardStatus[ir].begin()]);
+		if (BG.FetchPosition().second == RG.FetchPosition().second) {//在同一個column上
+			int j = BG.FetchPosition().second;
+			int ib = BG.FetchPosition().first;
+			int ir = RG.FetchPosition().first;
+			int k = 1;
+			while (ib + k < boardBottom &&
+				(boardStatus[ib + k][j] == 0)) {
+				k++;
 			}
-			else {//紅方
-				return BLACK;//黑方獲勝
+			ib += k;
+			if (ib == ir) {//射箭
+				if (nowTurn == BLACK) {//黑方
+					return RED;//紅方獲勝
+				}
+				else {//紅方
+					return BLACK;//黑方獲勝
+				}
 			}
 		}
+		return -1;
 	}
-	return -1;
+	else if (iterB == boardStatus[ib].end()) {
+		return RED;
+	}
+	else if (iterR == boardStatus[ir].end()) {
+		return BLACK;
+	}
 }
 
 void Game::boardStatusToPointBoardStatus() {
