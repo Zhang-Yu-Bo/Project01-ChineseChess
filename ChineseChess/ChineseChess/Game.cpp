@@ -185,7 +185,7 @@ namespace {
 		}
 	}
 	// 更新整個棋盤
-	void printBoardNoSpace(vector<vector<int>> chessInt,int m, int n) {
+	void printBoardNoSpace(vector<vector<int>> chessInt, int m = 42, int n = 1) {
 		__int64 row, col;
 		for (int i = 0; i < 21; i++) {
 			setConsoleCursorCoordinate(m, n + i);
@@ -207,7 +207,6 @@ namespace {
 			}
 		}
 	}
-
 }
 
 
@@ -419,7 +418,8 @@ void Game::gameStart() {
 					// 如果選取原本的位置，則視為放下棋子重新選擇
 					isTakingPiece = false;
 					setConsoleCursorCoordinate(0, 1);
-					printBoard(this->boardStatus);
+					//printBoard(this->boardStatus);
+					printBoardNoSpace(this->boardStatus);
 					// 顯示提示，現在回合，選取棋子
 					this->showTurn();
 					this->showChoice(0);
