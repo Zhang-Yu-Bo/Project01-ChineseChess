@@ -425,17 +425,18 @@ void Game::gameStart() {
 					this->showChoice(0);
 				}
 				else {
+					string chineseNotation;
 					bool isSuccess = false;
 					isSuccess = this->pointBoardStatus[virtualCoordinate.first]
 						[virtualCoordinate.second]
 					->MoveAndEat(
 						destinationCoordinate,
 						this->boardStatus,
-						this->pointBoardStatus
+						this->pointBoardStatus,
+						chineseNotation
 					);
 					if (isSuccess) {
-						string temp = "移動成功";
-						this->battleStatus.push_back(temp);
+						this->battleStatus.push_back(chineseNotation);
 						// 移動或吃棋成功
 						isTakingPiece = false;
 						int victory = JudgeVictory(boardStatus);
