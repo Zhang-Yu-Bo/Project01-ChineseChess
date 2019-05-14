@@ -21,6 +21,12 @@
 #define KEYBOARD_ENTER 13
 #define KEYBOARD_ESCAPE 27
 
+#define KEYBOARD_W 119
+#define KEYBOARD_A 97
+#define KEYBOARD_S 115
+#define KEYBOARD_D 100
+#define KEYBOARD_SPACE 32
+
 using namespace std;
 
 typedef pair<int, int> COORDINATE;

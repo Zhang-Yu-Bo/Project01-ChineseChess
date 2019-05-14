@@ -9,6 +9,11 @@
 // >:		46
 // Enter:	13
 // Esc:		27
+// w		119
+// a		97
+// s		115
+// d		100
+// space	32
 
 #ifdef _CONSOLE_INFO_HANDLE_
 CONSOLE_CURSOR_INFO cci;
@@ -306,6 +311,7 @@ Game::~Game()
 	}
 	this->theLogsOfBS.erase(this->theLogsOfBS.begin(), this->theLogsOfBS.end());
 
+	PlaySound(NULL, NULL, 0);
 }
 
 void Game::showMenu() {
@@ -338,8 +344,8 @@ void Game::showMenu() {
 			else if (y == 8) {
 				if (menu != NULL) {
 					system("cls");
-					menu->showMenu();
 					this->~Game();
+					menu->showMenu();
 				}
 			}
 		}
@@ -370,7 +376,7 @@ void Game::gameStart() {
 	printDownBorder();
 
 	// 下背景音樂
-	//PlaySound("Sounds/Lucid_Dreamer.wav", NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound("Sounds/Lucid_Dreamer_2.wav", NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	// 將畫面往上拉，若不將光標位置y提至0的話，console畫面將會往下一點
 	setConsoleCursorCoordinate(0, 0);
@@ -381,7 +387,7 @@ void Game::gameStart() {
 	// 顯示提示，現在回合
 	this->showTurn();
 
-	int commandPress, x = 42, y = 2;
+	int commandPress, x = 42, y = 2, x2 = 42, y2 = 2;
 	setConsoleCursorCoordinate(42, 2);
 	bool isTakingPiece = false;
 	COORDINATE virtualCoordinate = make_pair(1, 1);
@@ -391,19 +397,283 @@ void Game::gameStart() {
 
 	while (commandPress = _getch())
 	{
-		if (commandPress == KEYBOARD_UP) {
-			y -= 2;
+		if (this->nowTurn == 1) {
+			if (commandPress == KEYBOARD_UP) {
+				y -= 2;
+			}
+			else if (commandPress == KEYBOARD_DOWN) {
+				y += 2;
+			}
+			else if (commandPress == KEYBOARD_LEFT) {
+				x -= 4;
+			}
+			else if (commandPress == KEYBOARD_RIGHT) {
+				x += 4;
+			}
+			else if (commandPress == KEYBOARD_ENTER) {
+				if (!isTakingPiece) {
+					// 如果現在還沒拿起棋子時：
+					// console座標轉換為棋盤座標
+					virtualCoordinate.first = (y - 2) / 2 + 1;				//row
+					virtualCoordinate.second = (x - 42) / 4 + 1;			//col
+
+					if (this->nowTurn == 1) {
+						// 現在回合:紅手
+						if (this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] >= 8
+							&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 14) {
+							isTakingPiece = true;
+
+							// 顯示提示，選取棋子
+							this->showChoice(this->boardStatus[virtualCoordinate.first][virtualCoordinate.second]);
+
+							// 繪製可走/吃範圍
+							whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
+							whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
+							for (int j = 0; j < whereCanMove.size(); j++) {
+								// 棋盤座標轉換為console座標
+								setConsoleCursorCoordinate((whereCanMove[j].second - 1) * 4 + 42, (whereCanMove[j].first - 1) * 2 + 2);
+								setColor(28);
+								// row=2*y-1		col=2*x-2
+								cout << clearBoard[2 * whereCanMove[j].first - 1][2 * whereCanMove[j].second - 2];
+							}
+							for (int j = 0; j < whereCanEat.size(); j++) {
+								// 棋盤座標轉換為console座標
+								setConsoleCursorCoordinate((whereCanEat[j].second - 1) * 4 + 42, (whereCanEat[j].first - 1) * 2 + 2);
+								setColor(201);
+								printChess(this->boardStatus[whereCanEat[j].first][whereCanEat[j].second]);
+							}
+						}
+						else {
+							cout << "\a";
+						}
+					}
+
+				}
+				else {
+					// 如果現在拿起棋子時：
+					// console座標轉換為棋盤座標
+					destinationCoordinate.first = (y - 2) / 2 + 1;				//row
+					destinationCoordinate.second = (x - 42) / 4 + 1;			//col
+
+					if (virtualCoordinate == destinationCoordinate) {
+						// 如果選取原本的位置，則視為放下棋子重新選擇
+						isTakingPiece = false;
+						printBoardNoSpace(this->boardStatus);
+						// 顯示提示，現在回合，選取棋子
+						this->showTurn();
+						this->showChoice(0);
+					}
+					else {
+						string chineseNotation;
+						bool isSuccess = false;
+						isSuccess = this->pointBoardStatus[virtualCoordinate.first]
+							[virtualCoordinate.second]
+						->MoveAndEat(
+							destinationCoordinate,
+							this->boardStatus,
+							this->pointBoardStatus,
+							chineseNotation
+						);
+						if (isSuccess) {
+							this->battleStatus.push_back(chineseNotation);
+							this->theLogsOfBS.push_back(this->boardStatus);
+
+							// 下棋聲
+							mciSendString("play \"Sounds/下棋聲.mp3\" ", NULL, 0, 0);
+
+							// 移動或吃棋成功
+							isTakingPiece = false;
+							int victory = JudgeVictory(boardStatus);
+
+							if (victory == BLACK) {
+								//BLACK wins;
+								if (showDialog("黑方勝利，重新開始一局嗎？")) {
+									if (menu != NULL) {
+										system("cls");
+										this->~Game();
+										menu->showMenu();
+									}
+								}
+								else {
+									if (menu != NULL) {
+										system("cls");
+										this->~Game();
+										menu->showMenu();
+									}
+								}
+							}
+							else if (victory == RED) {
+								//RED wins;
+								if (showDialog("紅方勝利，重新開始一局嗎？")) {
+									if (menu != NULL) {
+										system("cls");
+										this->~Game();
+										menu->showMenu();
+									}
+								}
+								else {
+									if (menu != NULL) {
+										system("cls");
+										this->~Game();
+										menu->showMenu();
+									}
+								}
+							}
+
+							this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
+							printBoardNoSpace(this->boardStatus, 42, 1);
+							// 顯示提示，現在回合，選取棋子
+							this->showTurn();
+							this->showChoice(0);
+							this->showBattleStatus();
+						}
+						else {
+							cout << "\a";
+						}
+					}
+				}
+			}
 		}
-		else if (commandPress == KEYBOARD_DOWN) {
-			y += 2;
+		else if (this->nowTurn == 0) {
+			if (commandPress == KEYBOARD_W) {
+				y2 -= 2;
+			}
+			else if (commandPress == KEYBOARD_S) {
+				y2 += 2;
+			}
+			else if (commandPress == KEYBOARD_A) {
+				x2 -= 4;
+			}
+			else if (commandPress == KEYBOARD_D) {
+				x2 += 4;
+			}
+			else if (commandPress == KEYBOARD_SPACE) {
+				if (!isTakingPiece) {
+					// 如果現在還沒拿起棋子時：
+					// console座標轉換為棋盤座標
+					virtualCoordinate.first = (y2 - 2) / 2 + 1;				//row
+					virtualCoordinate.second = (x2 - 42) / 4 + 1;			//col
+
+					if (this->nowTurn == 0) {
+						// 現在回合:黑手
+						if (this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] >= 1
+							&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 7) {
+							isTakingPiece = true;
+
+							// 顯示提示，選取棋子
+							this->showChoice(this->boardStatus[virtualCoordinate.first][virtualCoordinate.second]);
+
+							// 繪製可走/吃範圍
+							whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
+							whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
+							for (int j = 0; j < whereCanMove.size(); j++) {
+								// 棋盤座標轉換為console座標
+								setConsoleCursorCoordinate((whereCanMove[j].second - 1) * 4 + 42, (whereCanMove[j].first - 1) * 2 + 2);
+								setColor(28);
+								// row=2*y-1		col=2*x-2
+								cout << clearBoard[2 * whereCanMove[j].first - 1][2 * whereCanMove[j].second - 2];
+							}
+							for (int j = 0; j < whereCanEat.size(); j++) {
+								// 棋盤座標轉換為console座標
+								setConsoleCursorCoordinate((whereCanEat[j].second - 1) * 4 + 42, (whereCanEat[j].first - 1) * 2 + 2);
+								setColor(201);
+								printChess(this->boardStatus[whereCanEat[j].first][whereCanEat[j].second]);
+							}
+
+						}
+						else {
+							cout << "\a";
+						}
+					}
+
+				}
+				else {
+					// 如果現在拿起棋子時：
+					// console座標轉換為棋盤座標
+					destinationCoordinate.first = (y2 - 2) / 2 + 1;				//row
+					destinationCoordinate.second = (x2 - 42) / 4 + 1;			//col
+
+					if (virtualCoordinate == destinationCoordinate) {
+						// 如果選取原本的位置，則視為放下棋子重新選擇
+						isTakingPiece = false;
+						printBoardNoSpace(this->boardStatus);
+						// 顯示提示，現在回合，選取棋子
+						this->showTurn();
+						this->showChoice(0);
+					}
+					else {
+						string chineseNotation;
+						bool isSuccess = false;
+						isSuccess = this->pointBoardStatus[virtualCoordinate.first]
+							[virtualCoordinate.second]
+						->MoveAndEat(
+							destinationCoordinate,
+							this->boardStatus,
+							this->pointBoardStatus,
+							chineseNotation
+						);
+						if (isSuccess) {
+							this->battleStatus.push_back(chineseNotation);
+							this->theLogsOfBS.push_back(this->boardStatus);
+
+							// 下棋聲
+							mciSendString("play \"Sounds/下棋聲.mp3\" ", NULL, 0, 0);
+
+							// 移動或吃棋成功
+							isTakingPiece = false;
+							int victory = JudgeVictory(boardStatus);
+
+							if (victory == BLACK) {
+								//BLACK wins;
+								if (showDialog("黑方勝利，重新開始一局嗎？")) {
+									if (menu != NULL) {
+										system("cls");
+										this->~Game();
+										menu->showMenu();
+									}
+								}
+								else {
+									if (menu != NULL) {
+										system("cls");
+										this->~Game();
+										menu->showMenu();
+									}
+								}
+							}
+							else if (victory == RED) {
+								//RED wins;
+								if (showDialog("紅方勝利，重新開始一局嗎？")) {
+									if (menu != NULL) {
+										system("cls");
+										this->~Game();
+										menu->showMenu();
+									}
+								}
+								else {
+									if (menu != NULL) {
+										system("cls");
+										this->~Game();
+										menu->showMenu();
+									}
+								}
+							}
+
+							this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
+							printBoardNoSpace(this->boardStatus, 42, 1);
+							// 顯示提示，現在回合，選取棋子
+							this->showTurn();
+							this->showChoice(0);
+							this->showBattleStatus();
+						}
+						else {
+							cout << "\a";
+						}
+					}
+				}
+			}
 		}
-		else if (commandPress == KEYBOARD_LEFT) {
-			x -= 4;
-		}
-		else if (commandPress == KEYBOARD_RIGHT) {
-			x += 4;
-		}
-		else if (commandPress == KEYBOARD_LEFT_SHIFT) {
+		
+		if (commandPress == KEYBOARD_LEFT_SHIFT) {
 			
 			if (this->battleStatus.size() >= 2) {
 				// 放下棋子
@@ -441,156 +711,6 @@ void Game::gameStart() {
 		else if (commandPress == KEYBOARD_RIGHT_SHIFT) {
 
 		}
-		else if (commandPress == KEYBOARD_ENTER) {
-			if (!isTakingPiece) {
-				// 如果現在還沒拿起棋子時：
-				// console座標轉換為棋盤座標
-				virtualCoordinate.first = (y - 2) / 2 + 1;				//row
-				virtualCoordinate.second = (x - 42) / 4 + 1;			//col
-
-				if (this->nowTurn == 0) {
-					// 現在回合:黑手
-					if (this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] >= 1
-						&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 7) {
-						isTakingPiece = true;
-
-						// 顯示提示，選取棋子
-						this->showChoice(this->boardStatus[virtualCoordinate.first][virtualCoordinate.second]);
-
-						// 繪製可走/吃範圍
-						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
-						whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
-						for (int j = 0; j < whereCanMove.size(); j++) {
-							// 棋盤座標轉換為console座標
-							setConsoleCursorCoordinate((whereCanMove[j].second - 1) * 4 + 42, (whereCanMove[j].first - 1) * 2 + 2);
-							setColor(28);
-							// row=2*y-1		col=2*x-2
-							cout << clearBoard[2 * whereCanMove[j].first - 1][2 * whereCanMove[j].second - 2];
-						}
-						for (int j = 0; j < whereCanEat.size(); j++) {
-							// 棋盤座標轉換為console座標
-							setConsoleCursorCoordinate((whereCanEat[j].second - 1) * 4 + 42, (whereCanEat[j].first - 1) * 2 + 2);
-							setColor(201);
-							printChess(this->boardStatus[whereCanEat[j].first][whereCanEat[j].second]);
-						}
-
-					}
-					else {
-						cout << "\a";
-					}
-				}
-				else if (this->nowTurn == 1) {
-					// 現在回合:紅手
-					if (this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] >= 8
-						&& this->boardStatus[virtualCoordinate.first][virtualCoordinate.second] <= 14) {
-						isTakingPiece = true;
-
-						// 顯示提示，選取棋子
-						this->showChoice(this->boardStatus[virtualCoordinate.first][virtualCoordinate.second]);
-						
-						// 繪製可走/吃範圍
-						whereCanMove = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->movable(this->boardStatus);
-						whereCanEat = this->pointBoardStatus[virtualCoordinate.first][virtualCoordinate.second]->eatable(this->boardStatus);
-						for (int j = 0; j < whereCanMove.size(); j++) {
-							// 棋盤座標轉換為console座標
-							setConsoleCursorCoordinate((whereCanMove[j].second - 1) * 4 + 42, (whereCanMove[j].first - 1) * 2 + 2);
-							setColor(28);
-							// row=2*y-1		col=2*x-2
-							cout << clearBoard[2 * whereCanMove[j].first - 1][2 * whereCanMove[j].second - 2];
-						}
-						for (int j = 0; j < whereCanEat.size(); j++) {
-							// 棋盤座標轉換為console座標
-							setConsoleCursorCoordinate((whereCanEat[j].second - 1) * 4 + 42, (whereCanEat[j].first - 1) * 2 + 2);
-							setColor(201);
-							printChess(this->boardStatus[whereCanEat[j].first][whereCanEat[j].second]);
-						}
-					}
-					else {
-						cout << "\a";
-					}
-				}
-
-			}
-			else {
-				// 如果現在拿起棋子時：
-				// console座標轉換為棋盤座標
-				destinationCoordinate.first = (y - 2) / 2 + 1;				//row
-				destinationCoordinate.second = (x - 42) / 4 + 1;			//col
-
-				if (virtualCoordinate == destinationCoordinate) {
-					// 如果選取原本的位置，則視為放下棋子重新選擇
-					isTakingPiece = false;
-					printBoardNoSpace(this->boardStatus);
-					// 顯示提示，現在回合，選取棋子
-					this->showTurn();
-					this->showChoice(0);
-				}
-				else {
-					string chineseNotation;
-					bool isSuccess = false;
-					isSuccess = this->pointBoardStatus[virtualCoordinate.first]
-						[virtualCoordinate.second]
-					->MoveAndEat(
-						destinationCoordinate,
-						this->boardStatus,
-						this->pointBoardStatus,
-						chineseNotation
-					);
-					if (isSuccess) {
-						this->battleStatus.push_back(chineseNotation);
-						this->theLogsOfBS.push_back(this->boardStatus);
-
-						// 下棋聲
-						mciSendString("play \"Sounds/下棋聲.mp3\" ", NULL, 0, 0);
-
-						// 移動或吃棋成功
-						isTakingPiece = false;
-						int victory = JudgeVictory(boardStatus);
-
-						if(victory == BLACK){
-							//BLACK wins;
-							if (showDialog("黑方勝利，重新開始一局嗎？")) {
-								system("cls");
-								menu->showMenu();
-								this->~Game();
-							}
-							else {
-								if (menu != NULL) {
-									system("cls");
-									menu->showMenu();
-									this->~Game();
-								}
-							}
-						}
-						else if (victory == RED) {
-							//RED wins;
-							if (showDialog("紅方勝利，重新開始一局嗎？")) {
-								system("cls");
-								menu->showMenu();
-								this->~Game();
-							}
-							else {
-								if (menu != NULL) {
-									system("cls");
-									menu->showMenu();
-									this->~Game();
-								}
-							}
-						}
-						
-						this->nowTurn = (this->nowTurn == 0) ? 1 : 0;
-						printBoardNoSpace(this->boardStatus, 42, 1);
-						// 顯示提示，現在回合，選取棋子
-						this->showTurn();
-						this->showChoice(0);
-						this->showBattleStatus();
-					}
-					else {
-						cout << "\a";
-					}
-				}
-			}
-		}
 		else if (commandPress == KEYBOARD_ESCAPE) {
 			isTakingPiece = false;
 			this->showTurn();
@@ -602,7 +722,14 @@ void Game::gameStart() {
 		x = (x < 42) ? (42 + 32) : x;
 		y = (y > (2 + 18)) ? 2 : y;
 		y = (y < 2) ? (2 + 18) : y;
-		setConsoleCursorCoordinate(x, y);
+		x2 = (x2 > (42 + 32)) ? 42 : x2;
+		x2 = (x2 < 42) ? (42 + 32) : x2;
+		y2 = (y2 > (2 + 18)) ? 2 : y2;
+		y2 = (y2 < 2) ? (2 + 18) : y2;
+		if (this->nowTurn == 1)
+			setConsoleCursorCoordinate(x, y);
+		else
+			setConsoleCursorCoordinate(x2, y2);
 	}
 }
 
