@@ -217,7 +217,7 @@ namespace {
 	}
 
 	// 顯示yes no對話框
-	bool showDialog(string msg) {
+	bool showDialog(string msg, bool showOption = true) {
 		setColor(132);
 		setConsoleCursorCoordinate(42, 6);
 		cout << "▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼";
@@ -225,10 +225,10 @@ namespace {
 			setConsoleCursorCoordinate(42, 6 + i);
 			cout << "∥　　　　　　　　　　　　　　　∥";
 			if (i == 3) {
-				setConsoleCursorCoordinate(46, 6 + i);
+				setConsoleCursorCoordinate(44, 6 + i);
 				cout << msg;
 			}
-			else if (i == 8) {
+			else if (i == 8 && showOption) {
 				setConsoleCursorCoordinate(60, 6 + i);
 				cout << "是";
 				setConsoleCursorCoordinate(68, 6 + i);
@@ -242,13 +242,13 @@ namespace {
 		int commandPress = 0, x = 60;
 		while (commandPress = _getch())
 		{
-			if (commandPress == KEYBOARD_LEFT) {
+			if (commandPress == KEYBOARD_LEFT || commandPress == KEYBOARD_A) {
 				x -= 8;
 			}
-			else if (commandPress == KEYBOARD_RIGHT) {
+			else if (commandPress == KEYBOARD_RIGHT || commandPress == KEYBOARD_D) {
 				x += 8;
 			}
-			else if (commandPress == KEYBOARD_ENTER) {
+			else if (commandPress == KEYBOARD_ENTER || commandPress == KEYBOARD_SPACE) {
 				if (x == 60) {
 					return true;
 				}
@@ -329,13 +329,13 @@ void Game::showMenu() {
 	cursorVisiable(false);
 	while (commandPress = _getch())
 	{
-		if (commandPress == KEYBOARD_UP) {
+		if (commandPress == KEYBOARD_UP || commandPress == KEYBOARD_W) {
 			y -= 2;
 		}
-		else if (commandPress == KEYBOARD_DOWN) {
+		else if (commandPress == KEYBOARD_DOWN || commandPress == KEYBOARD_S) {
 			y += 2;
 		}
-		else if (commandPress == KEYBOARD_ENTER) {
+		else if (commandPress == KEYBOARD_ENTER || commandPress==KEYBOARD_SPACE) {
 			if (y == 6) {
 				cursorVisiable(true);
 				printBoardNoSpace(this->boardStatus, 42, 1);
@@ -487,36 +487,20 @@ void Game::gameStart() {
 
 							if (victory == BLACK) {
 								//BLACK wins;
-								if (showDialog("黑方勝利，重新開始一局嗎？")) {
-									if (menu != NULL) {
-										system("cls");
-										this->~Game();
-										menu->showMenu();
-									}
-								}
-								else {
-									if (menu != NULL) {
-										system("cls");
-										this->~Game();
-										menu->showMenu();
-									}
+								showDialog("黑方勝利，按ＥＮＴＥＲ回主選單", false);
+								if (menu != NULL) {
+									system("cls");
+									this->~Game();
+									menu->showMenu();
 								}
 							}
 							else if (victory == RED) {
 								//RED wins;
-								if (showDialog("紅方勝利，重新開始一局嗎？")) {
-									if (menu != NULL) {
-										system("cls");
-										this->~Game();
-										menu->showMenu();
-									}
-								}
-								else {
-									if (menu != NULL) {
-										system("cls");
-										this->~Game();
-										menu->showMenu();
-									}
+								showDialog("紅方勝利，按ＥＮＴＥＲ回主選單", false);
+								if (menu != NULL) {
+									system("cls");
+									this->~Game();
+									menu->showMenu();
 								}
 							}
 
@@ -625,36 +609,20 @@ void Game::gameStart() {
 
 							if (victory == BLACK) {
 								//BLACK wins;
-								if (showDialog("黑方勝利，重新開始一局嗎？")) {
-									if (menu != NULL) {
-										system("cls");
-										this->~Game();
-										menu->showMenu();
-									}
-								}
-								else {
-									if (menu != NULL) {
-										system("cls");
-										this->~Game();
-										menu->showMenu();
-									}
+								showDialog("黑方勝利，按ＥＮＴＥＲ回主選單", false);
+								if (menu != NULL) {
+									system("cls");
+									this->~Game();
+									menu->showMenu();
 								}
 							}
 							else if (victory == RED) {
 								//RED wins;
-								if (showDialog("紅方勝利，重新開始一局嗎？")) {
-									if (menu != NULL) {
-										system("cls");
-										this->~Game();
-										menu->showMenu();
-									}
-								}
-								else {
-									if (menu != NULL) {
-										system("cls");
-										this->~Game();
-										menu->showMenu();
-									}
+								showDialog("紅方勝利，按ＥＮＴＥＲ回主選單", false);
+								if (menu != NULL) {
+									system("cls");
+									this->~Game();
+									menu->showMenu();
 								}
 							}
 
