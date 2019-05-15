@@ -65,10 +65,10 @@ void MainMenu::showMenu() {
 	// ¥ú¼Ð±±¨î
 	while (commandPress = _getch())
 	{
-		if (commandPress == 72)	y -= 2;
-		if (commandPress == 80)	y += 2;
+		if (commandPress == 72 || commandPress== 119)	y -= 2;
+		if (commandPress == 80 || commandPress == 115)	y += 2;
 
-		if (commandPress == 13) {
+		if (commandPress == 13 || commandPress == 32) {
 			if (y == 1) {
 				cout << "\a";
 				//this->gameStart();

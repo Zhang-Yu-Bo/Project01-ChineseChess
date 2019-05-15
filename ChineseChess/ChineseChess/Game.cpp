@@ -100,13 +100,13 @@ const string rightSpace[21] = {
 	"　　　　　　　　　　　　　　　　　　　　∥",
 	"　　　　　　　　　　　　　　　　　　　　∥",
 	"　。－－－－－－－－－－－－－－－－。　∥",
-	"　｜　　　↑　　　　　　　　　　　　｜　∥",
-	"　｜　　←＋→　　方向鍵選棋　　　　｜　∥",
-	"　｜　　　↓　　　　　　　　　　　　｜　∥",
 	"　｜　　　　　　　　　　　　　　　　｜　∥",
-	"　｜　　Ｅｎｔｅｒ　選取棋子　　　　｜　∥",
+	"　｜　１Ｐ：↑↓←→　ＥＮＴＥＲ　　｜　∥",
+	"　｜　２Ｐ：ＷＡＳＤ　ＳＰＡＣＥ　　｜　∥",
+	"　｜　　　　　　　　　　　　　　　　｜　∥",
 	"　｜　　　Ｅｓｃ　　開啟選單　　　　｜　∥",
 	"　｜　　　　＜　　　悔棋　　　　　　｜　∥",
+	"　｜　　　　＞　　　暫停背景音樂　　｜　∥",
 	"　｜　　　　　　　　　　　　　　　　｜　∥",
 	"　。－－－－－－－－－－－－－－－－。　∥",
 	"　　　　　　　　　　　　　　　　　　　　∥"
@@ -225,7 +225,7 @@ namespace {
 			setConsoleCursorCoordinate(42, 6 + i);
 			cout << "∥　　　　　　　　　　　　　　　∥";
 			if (i == 3) {
-				setConsoleCursorCoordinate(44, 6 + i);
+				setConsoleCursorCoordinate(46, 6 + i);
 				cout << msg;
 			}
 			else if (i == 8 && showOption) {
@@ -239,29 +239,37 @@ namespace {
 		cout << "▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲";
 
 		setConsoleCursorCoordinate(60, 14);
+		if (!showOption)	cursorVisiable(false);
 		int commandPress = 0, x = 60;
 		while (commandPress = _getch())
 		{
-			if (commandPress == KEYBOARD_LEFT || commandPress == KEYBOARD_A) {
-				x -= 8;
-			}
-			else if (commandPress == KEYBOARD_RIGHT || commandPress == KEYBOARD_D) {
-				x += 8;
-			}
-			else if (commandPress == KEYBOARD_ENTER || commandPress == KEYBOARD_SPACE) {
-				if (x == 60) {
-					return true;
+			if (showOption) {
+				if (commandPress == KEYBOARD_LEFT || commandPress == KEYBOARD_A) {
+					x -= 8;
 				}
-				else if (x == 68) {
+				else if (commandPress == KEYBOARD_RIGHT || commandPress == KEYBOARD_D) {
+					x += 8;
+				}
+				else if (commandPress == KEYBOARD_ENTER || commandPress == KEYBOARD_SPACE) {
+					if (x == 60) {
+						return true;
+					}
+					else if (x == 68) {
+						return false;
+					}
+				}
+				else if (commandPress == KEYBOARD_ESCAPE) {
 					return false;
 				}
+				x = (x > 68) ? 60 : x;
+				x = (x < 60) ? 68 : x;
+				setConsoleCursorCoordinate(x, 14);
 			}
-			else if (commandPress == KEYBOARD_ESCAPE) {
+			else {
+				cursorVisiable(true);
 				return false;
 			}
-			x = (x > 68) ? 60 : x;
-			x = (x < 60) ? 68 : x;
-			setConsoleCursorCoordinate(x, 14);
+			
 		}
 	}
 
@@ -387,9 +395,9 @@ void Game::gameStart() {
 	// 顯示提示，現在回合
 	this->showTurn();
 
-	int commandPress, x = 42, y = 2, x2 = 42, y2 = 2;
-	setConsoleCursorCoordinate(42, 2);
-	bool isTakingPiece = false;
+	int commandPress, x = 42, y = 20, x2 = 42, y2 = 2;
+	setConsoleCursorCoordinate(42, 20);
+	bool isTakingPiece = false, bkMusicStatus = true;
 	COORDINATE virtualCoordinate = make_pair(1, 1);
 	COORDINATE destinationCoordinate = make_pair(1, 1);
 	vector<COORDINATE> whereCanMove;
@@ -397,6 +405,7 @@ void Game::gameStart() {
 
 	while (commandPress = _getch())
 	{
+		// 1P or 2P 控制權
 		if (this->nowTurn == 1) {
 			if (commandPress == KEYBOARD_UP) {
 				y -= 2;
@@ -487,7 +496,7 @@ void Game::gameStart() {
 
 							if (victory == BLACK) {
 								//BLACK wins;
-								showDialog("黑方勝利，按ＥＮＴＥＲ回主選單", false);
+								showDialog("黑方勝利，按任意鍵回主選單", false);
 								if (menu != NULL) {
 									system("cls");
 									this->~Game();
@@ -496,7 +505,7 @@ void Game::gameStart() {
 							}
 							else if (victory == RED) {
 								//RED wins;
-								showDialog("紅方勝利，按ＥＮＴＥＲ回主選單", false);
+								showDialog("紅方勝利，按任意鍵回主選單", false);
 								if (menu != NULL) {
 									system("cls");
 									this->~Game();
@@ -609,7 +618,7 @@ void Game::gameStart() {
 
 							if (victory == BLACK) {
 								//BLACK wins;
-								showDialog("黑方勝利，按ＥＮＴＥＲ回主選單", false);
+								showDialog("黑方勝利，按任意鍵回主選單", false);
 								if (menu != NULL) {
 									system("cls");
 									this->~Game();
@@ -618,7 +627,7 @@ void Game::gameStart() {
 							}
 							else if (victory == RED) {
 								//RED wins;
-								showDialog("紅方勝利，按ＥＮＴＥＲ回主選單", false);
+								showDialog("紅方勝利，按任意鍵回主選單", false);
 								if (menu != NULL) {
 									system("cls");
 									this->~Game();
@@ -640,35 +649,41 @@ void Game::gameStart() {
 				}
 			}
 		}
-		
+
 		if (commandPress == KEYBOARD_LEFT_SHIFT) {
 			
 			if (this->battleStatus.size() >= 2) {
 				// 放下棋子
 				isTakingPiece = false;
+				this->showChoice(0);
 
 				if (showDialog("是否要悔棋呢？")) {
 					// 刪除棋盤和戰況紀錄
 					this->theLogsOfBS.erase(this->theLogsOfBS.end() - 2, this->theLogsOfBS.end());
 					this->battleStatus.erase(this->battleStatus.end() - 2, this->battleStatus.end());
+
+					if (this->theLogsOfBS.size() == 0)
+						setFileNameAndProcess();
+					else
+						this->boardStatus = *(this->theLogsOfBS.end() - 1);
+
+					boardStatusToPointBoardStatus();
+					setColor(7);
+					// 全版更新
+					system("cls");
+					setConsoleCursorCoordinate(0, 0);
+					printTopBorder();
+					printBoard(this->boardStatus);
+					printDownBorder();
+					this->showTurn();
+					this->showChoice(0);
+					this->showBattleStatus();
 				}
-
-
-				if (this->theLogsOfBS.size() == 0)
-					setFileNameAndProcess();
-				else
-					this->boardStatus = *(this->theLogsOfBS.end() - 1);
-
-				boardStatusToPointBoardStatus();
-				setColor(7);
-				setConsoleCursorCoordinate(0, 1);
-				// 將舊戰況紀錄擦掉
-				printBoard(this->boardStatus);
-				this->showTurn();
-				this->showChoice(0);
-				this->showBattleStatus();
-				// 更新第二次畫面，較不會顯示錯誤
-				printBoardNoSpace(this->boardStatus);
+				else {
+					// 更新第二次畫面，較不會顯示錯誤
+					printBoardNoSpace(this->boardStatus);
+					printBoardNoSpace(this->boardStatus);
+				}
 				
 			}
 			else {
@@ -677,7 +692,14 @@ void Game::gameStart() {
 
 		}
 		else if (commandPress == KEYBOARD_RIGHT_SHIFT) {
-
+			if (bkMusicStatus) {
+				PlaySound(NULL, NULL, 0);
+				bkMusicStatus = false;
+			}
+			else {
+				PlaySound("Sounds/Lucid_Dreamer_2.wav", NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+				bkMusicStatus = true;
+			}
 		}
 		else if (commandPress == KEYBOARD_ESCAPE) {
 			isTakingPiece = false;
