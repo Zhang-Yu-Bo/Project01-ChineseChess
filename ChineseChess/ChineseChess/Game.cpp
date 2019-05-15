@@ -348,6 +348,7 @@ void Game::showMenu() {
 		else if (commandPress == KEYBOARD_ENTER || commandPress==KEYBOARD_SPACE) {
 			if (y == 6) {
 				cursorVisiable(true);
+				this->freshGameConsole();
 				printBoardNoSpace(this->boardStatus, 42, 1);
 				break;
 			}
@@ -368,6 +369,7 @@ void Game::showMenu() {
 		}
 		else if (commandPress == KEYBOARD_ESCAPE) {
 			cursorVisiable(true);
+			this->freshGameConsole();
 			printBoardNoSpace(this->boardStatus, 42, 1);
 			break;
 		}
@@ -940,7 +942,7 @@ void Game::saveGame() {
 	cursorVisiable(true);
 	setConsoleCursorCoordinate(56, 8);		
 	getline(cin, fileName);
-	if (fileName == "quit") {
+	if (fileName == "quit" || fileName == "Initial" || fileName == "Check" || fileName == "Test") {
 		cout << "\a";
 	}
 	else {
@@ -964,6 +966,7 @@ void Game::saveGame() {
 
 void Game::freshGameConsole() {
 	// 全版更新
+	setColor(7);
 	system("cls");
 	setConsoleCursorCoordinate(0, 0);
 	printTopBorder();
