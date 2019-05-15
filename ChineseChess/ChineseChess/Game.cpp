@@ -936,7 +936,7 @@ void Game::saveGame() {
 	setConsoleCursorCoordinate(42, 7);		cout << "∥　　　　　　　　　　　　　　　∥";
 	setConsoleCursorCoordinate(42, 8);		cout << "∥　輸入檔名：　　　　　　　　　∥";
 	setConsoleCursorCoordinate(42, 9);		cout << "∥　　　　　　　　　　　　　　　∥";
-	setConsoleCursorCoordinate(42, 10);		cout << "∥　　　　　　　（quit取消存檔）∥";
+	setConsoleCursorCoordinate(42, 10);		cout << "∥　　　　　　　（輸入quit返回）∥";
 	setConsoleCursorCoordinate(42, 11);		cout << "▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲";
 	string fileName = "";
 	cursorVisiable(true);

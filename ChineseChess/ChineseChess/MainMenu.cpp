@@ -111,7 +111,7 @@ string MainMenu::showFiles() {
 	cout << "∥　　　　　　　　　　　　　　　∥\n";
 	cout << "∥　輸入檔名：　　　　　　　　　∥\n";
 	cout << "∥　　　　　　　　　　　　　　　∥\n";
-	cout << "∥　　　　　　　（quit取消輸入）∥\n";
+	cout << "∥　　　　　　　（輸入quit返回）∥\n";
 	cout << "▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲";
 	setConsoleCursorCoordinate(0, 0);
 	cursorVisiable(true);
