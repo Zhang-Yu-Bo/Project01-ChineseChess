@@ -55,9 +55,11 @@ const string clearBoard[21][18] = {
 #endif // _CLEAR_BOARD_
 
 #ifdef _GAME_MENU_
-const string gameMenuOption[5] = {
+const string gameMenuOption[7] = {
 		"▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼",
 		"∥　　　　　→繼續遊戲　　　　　∥",
+		"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥",
+		"∥　　　　　　儲存棋盤　　　　　∥",
 		"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥",
 		"∥　　　　　　返回主選單　　　　∥",
 		"▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲"
@@ -268,20 +270,20 @@ namespace {
 			else {
 				cursorVisiable(true);
 				return false;
-			}
-			
+			}			
 		}
+		return false;
 	}
 
 }
 
 
-Game::Game()
+Game::Game(string fileName)
 {
 	// 初始化 (黑/紅) (0/1) 的回合
 	this->nowTurn = 0;
 	// 初始化 棋盤檔名
-	this->tableFileName = "Initial.txt";
+	this->tableFileName = fileName;
 	//this->tableFileName = "Check.txt";
 	//this->tableFileName = "Test.txt";
 	// =====================初始化console控制元件=====================
@@ -350,6 +352,13 @@ void Game::showMenu() {
 				break;
 			}
 			else if (y == 8) {
+				this->saveGame();
+				cursorVisiable(true);
+				this->freshGameConsole();
+				printBoardNoSpace(this->boardStatus, 42, 1);
+				break;
+			}
+			else if (y == 10) {
 				if (menu != NULL) {
 					system("cls");
 					this->~Game();
@@ -362,8 +371,8 @@ void Game::showMenu() {
 			printBoardNoSpace(this->boardStatus, 42, 1);
 			break;
 		}
-		y = (y > 8) ? 6 : y;
-		y = (y < 6) ? 8 : y;
+		y = (y > 10) ? 6 : y;
+		y = (y < 6) ? 10 : y;
 		cout << "　\b\b";
 		setConsoleCursorCoordinate(54, y);
 		cout << "→\b\b";
@@ -396,7 +405,10 @@ void Game::gameStart() {
 	this->showTurn();
 
 	int commandPress, x = 42, y = 20, x2 = 42, y2 = 2;
-	setConsoleCursorCoordinate(42, 20);
+	if (this->nowTurn==1)
+		setConsoleCursorCoordinate(42, 20);
+	else
+		setConsoleCursorCoordinate(42, 2);
 	bool isTakingPiece = false, bkMusicStatus = true;
 	COORDINATE virtualCoordinate = make_pair(1, 1);
 	COORDINATE destinationCoordinate = make_pair(1, 1);
@@ -670,21 +682,13 @@ void Game::gameStart() {
 					boardStatusToPointBoardStatus();
 					setColor(7);
 					// 全版更新
-					system("cls");
-					setConsoleCursorCoordinate(0, 0);
-					printTopBorder();
-					printBoard(this->boardStatus);
-					printDownBorder();
-					this->showTurn();
-					this->showChoice(0);
-					this->showBattleStatus();
+					this->freshGameConsole();
 				}
 				else {
 					// 更新第二次畫面，較不會顯示錯誤
 					printBoardNoSpace(this->boardStatus);
 					printBoardNoSpace(this->boardStatus);
 				}
-				
 			}
 			else {
 				cout << "\a";
@@ -922,4 +926,50 @@ void Game::boardStatusToPointBoardStatus() {
 			// 結束建立pointboardStatus
 		}
 	}
+}
+
+void Game::saveGame() {
+	setConsoleCursorCoordinate(42, 5);		cout << "▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼"; 
+	setConsoleCursorCoordinate(42, 6);		cout << "∥　　　　　　　　　　　　　　　∥";
+	setConsoleCursorCoordinate(42, 7);		cout << "∥　　　　　　　　　　　　　　　∥";
+	setConsoleCursorCoordinate(42, 8);		cout << "∥　輸入檔名：　　　　　　　　　∥";
+	setConsoleCursorCoordinate(42, 9);		cout << "∥　　　　　　　　　　　　　　　∥";
+	setConsoleCursorCoordinate(42, 10);		cout << "∥　　　　　　　（quit取消存檔）∥";
+	setConsoleCursorCoordinate(42, 11);		cout << "▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲";
+	string fileName = "";
+	cursorVisiable(true);
+	setConsoleCursorCoordinate(56, 8);		
+	getline(cin, fileName);
+	if (fileName == "quit") {
+		cout << "\a";
+	}
+	else {
+		fstream output("boardText/" + fileName + ".txt",ios::out);
+		if (output.is_open()) {
+			for (int i = 1; i < 11; i++) {
+				for (int j = 1; j < 10; j++) {
+					if (j == 9) {
+						output << this->boardStatus[i][j] << endl;
+					}
+					else {
+						output << this->boardStatus[i][j] << " ";
+					}
+				}
+			}
+			output << this->nowTurn;
+			output.close();
+		}
+	}
+}
+
+void Game::freshGameConsole() {
+	// 全版更新
+	system("cls");
+	setConsoleCursorCoordinate(0, 0);
+	printTopBorder();
+	printBoard(this->boardStatus);
+	printDownBorder();
+	this->showTurn();
+	this->showChoice(0);
+	this->showBattleStatus();
 }

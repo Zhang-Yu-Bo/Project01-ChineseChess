@@ -9,6 +9,7 @@
 #include "PieceClassIndex/PieceClass.h"
 #include "MainMenu.h"
 #include <iomanip>
+#include <fstream>
 #include <mmsystem.h>
 #pragma comment(lib,"Winmm.lib")
 
@@ -51,7 +52,7 @@ extern COORD cursorPosition;
 
 #ifndef _GAME_MENU_
 #define _GAME_MENU_
-extern const string gameMenuOption[5];
+extern const string gameMenuOption[7];
 #endif // !_GAME_MENU_
 
 #ifndef _LEFT_RIGHT_SPACE_
@@ -67,7 +68,7 @@ extern const string rightSpace[21];
 class Game
 {
 public:
-	Game();
+	Game(string);
 	~Game();
 	void gameStart();
 	void showMenu();
@@ -78,6 +79,8 @@ private:
 	void showChoice(int choice);
 	void showBattleStatus();
 	void boardStatusToPointBoardStatus();
+	void saveGame();
+	void freshGameConsole();
 	//黑方勝利擲回BLACK，紅方勝利擲回RED(macro: BLACK 0 / RED 1)，沒分勝負擲回-1，出現錯誤(找不到任一方的王)擲回-2
 	int JudgeVictory(const vector<vector<int>>& boardStatus);
 	// 

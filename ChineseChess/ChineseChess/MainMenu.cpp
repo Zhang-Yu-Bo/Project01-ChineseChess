@@ -1,9 +1,11 @@
 #include "MainMenu.h"
 
 #ifdef _MAIN_MENU_OPTION_
-const string mainMenuOption[5] = {
+const string mainMenuOption[7] = {
 		"▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼\n",
 		"∥　　　　　→開始遊戲　　　　　∥\n",
+		"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥\n",
+		"∥　　　　　　讀取棋盤　　　　　∥\n",
 		"∥＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝∥\n",
 		"∥　　　　　　結束程式　　　　　∥\n",
 		"▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲"
@@ -44,8 +46,9 @@ MainMenu::~MainMenu()
 
 void MainMenu::showMenu() {
 	// 設置視窗大小
-	SMALL_RECT windowSize = { 0,0,33, 4 };
+	SMALL_RECT windowSize = { 0,0,33, 6 };
 	SetConsoleWindowInfo(handle, TRUE, &windowSize);
+	setConsoleCursorCoordinate(0, 0);
 
 	setColor(7,0);
 	// 顯示輸出Menu內容
@@ -71,21 +74,49 @@ void MainMenu::showMenu() {
 		if (commandPress == 13 || commandPress == 32) {
 			if (y == 1) {
 				cout << "\a";
-				//this->gameStart();
-				Game newGame;
+				Game newGame("Initial.txt");
 				newGame.gameStart();
 			}
 			else if (y == 3) {
+				string fileName = this->showFiles();
+				if (fileName == "quit") {
+					this->showMenu();
+				}
+				else {
+					cout << "\a";
+					Game newGame(fileName+".txt");
+					newGame.gameStart();
+				}
+				
+			}
+			else if (y == 5) {
 				exit(1);
 			}
 		}
 
-		if (y < 1)	y = 3;
-		if (y > 3)	y = 1;
+		if (y < 1)	y = 5;
+		if (y > 5)	y = 1;
 
 		cout << "\b\b　";
 		cursorPosition.Y = y;
 		SetConsoleCursorPosition(handle, cursorPosition);
 		cout << "\b\b→";
 	}
+}
+
+string MainMenu::showFiles() {
+	setConsoleCursorCoordinate(0, 0);
+	cout << "▼＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▼\n";
+	cout << "∥　　　　　　　　　　　　　　　∥\n";
+	cout << "∥　　　　　　　　　　　　　　　∥\n";
+	cout << "∥　輸入檔名：　　　　　　　　　∥\n";
+	cout << "∥　　　　　　　　　　　　　　　∥\n";
+	cout << "∥　　　　　　　（quit取消輸入）∥\n";
+	cout << "▲＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝▲";
+	setConsoleCursorCoordinate(0, 0);
+	cursorVisiable(true);
+	setConsoleCursorCoordinate(14, 3);
+	string fileName = "";
+	getline(cin, fileName);
+	return fileName;
 }
